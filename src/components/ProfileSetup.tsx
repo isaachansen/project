@@ -1,14 +1,20 @@
-import React, { useState } from 'react';
-import { User, TeslaModel } from '../types';
-import { X } from 'lucide-react';
+import React, { useState } from "react";
+import { TeslaModel } from "../types";
+import { User as AuthUser } from "@supabase/supabase-js";
+import { UserInsert } from "../lib/auth";
 
 interface ProfileSetupProps {
-  user: any;
-  onComplete: (profile: Omit<User, 'id' | 'created_at' | 'updated_at'>) => void;
+  user: AuthUser;
+  onComplete: (profile: Omit<UserInsert, "id">) => void;
 }
 
 const TESLA_MODELS: TeslaModel[] = [
-  'Model S', 'Model 3', 'Model X', 'Model Y', 'Cybertruck', 'Roadster'
+  "Model S",
+  "Model 3",
+  "Model X",
+  "Model Y",
+  "Cybertruck",
+  "Roadster",
 ];
 
 const CURRENT_YEAR = new Date().getFullYear();
@@ -16,29 +22,34 @@ const YEARS = Array.from({ length: 15 }, (_, i) => CURRENT_YEAR - i);
 
 export function ProfileSetup({ user, onComplete }: ProfileSetupProps) {
   const [formData, setFormData] = useState({
-    name: user?.user_metadata?.full_name || '',
-    tesla_model: '' as TeslaModel,
+    name: user?.user_metadata?.full_name || "",
+    tesla_model: "" as TeslaModel,
     tesla_year: CURRENT_YEAR,
-    preferred_charge_percentage: 80
+    preferred_charge_percentage: 80,
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onComplete({
-      id: user.id,
-      email: user.email,
-      ...formData
+      email: user.email || "",
+      ...formData,
     });
   };
 
   const getTeslaImage = (model: TeslaModel) => {
     const imageMap = {
-      'Model S': 'https://images.pexels.com/photos/3729464/pexels-photo-3729464.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'Model 3': 'https://images.pexels.com/photos/3729460/pexels-photo-3729460.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'Model X': 'https://images.pexels.com/photos/3729464/pexels-photo-3729464.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'Model Y': 'https://images.pexels.com/photos/3729460/pexels-photo-3729460.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'Cybertruck': 'https://images.pexels.com/photos/3729464/pexels-photo-3729464.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'Roadster': 'https://images.pexels.com/photos/3729464/pexels-photo-3729464.jpeg?auto=compress&cs=tinysrgb&w=400'
+      "Model S":
+        "https://images.pexels.com/photos/3729464/pexels-photo-3729464.jpeg?auto=compress&cs=tinysrgb&w=400",
+      "Model 3":
+        "https://images.pexels.com/photos/3729460/pexels-photo-3729460.jpeg?auto=compress&cs=tinysrgb&w=400",
+      "Model X":
+        "https://images.pexels.com/photos/3729464/pexels-photo-3729464.jpeg?auto=compress&cs=tinysrgb&w=400",
+      "Model Y":
+        "https://images.pexels.com/photos/3729460/pexels-photo-3729460.jpeg?auto=compress&cs=tinysrgb&w=400",
+      Cybertruck:
+        "https://images.pexels.com/photos/3729464/pexels-photo-3729464.jpeg?auto=compress&cs=tinysrgb&w=400",
+      Roadster:
+        "https://images.pexels.com/photos/3729464/pexels-photo-3729464.jpeg?auto=compress&cs=tinysrgb&w=400",
     };
     return imageMap[model];
   };
@@ -65,7 +76,9 @@ export function ProfileSetup({ user, onComplete }: ProfileSetupProps) {
             <input
               type="text"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Enter your full name"
               required
@@ -81,11 +94,13 @@ export function ProfileSetup({ user, onComplete }: ProfileSetupProps) {
                 <button
                   key={model}
                   type="button"
-                  onClick={() => setFormData({ ...formData, tesla_model: model })}
+                  onClick={() =>
+                    setFormData({ ...formData, tesla_model: model })
+                  }
                   className={`p-3 rounded-xl border-2 transition-all duration-200 ${
                     formData.tesla_model === model
-                      ? 'border-blue-500 bg-blue-50 text-blue-700'
-                      : 'border-gray-200 hover:border-gray-300'
+                      ? "border-blue-500 bg-blue-50 text-blue-700"
+                      : "border-gray-200 hover:border-gray-300"
                   }`}
                 >
                   <div className="text-sm font-medium">{model}</div>
@@ -100,7 +115,12 @@ export function ProfileSetup({ user, onComplete }: ProfileSetupProps) {
             </label>
             <select
               value={formData.tesla_year}
-              onChange={(e) => setFormData({ ...formData, tesla_year: parseInt(e.target.value) })}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  tesla_year: parseInt(e.target.value),
+                })
+              }
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               {YEARS.map((year) => (
@@ -121,7 +141,12 @@ export function ProfileSetup({ user, onComplete }: ProfileSetupProps) {
                 min="50"
                 max="100"
                 value={formData.preferred_charge_percentage}
-                onChange={(e) => setFormData({ ...formData, preferred_charge_percentage: parseInt(e.target.value) })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    preferred_charge_percentage: parseInt(e.target.value),
+                  })
+                }
                 className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
               />
               <div className="flex justify-between text-sm text-gray-600">

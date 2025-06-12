@@ -57,7 +57,9 @@ input[type="range"]::-moz-range-thumb:hover {
 }
 
 /* Smooth transitions for all interactive elements */
-button, input, select {
+button,
+input,
+select {
   transition: all 0.2s ease-in-out;
 }
 
@@ -84,8 +86,9 @@ button, input, select {
   button {
     min-height: 44px;
   }
-  
-  input, select {
+
+  input,
+  select {
     min-height: 44px;
   }
 }

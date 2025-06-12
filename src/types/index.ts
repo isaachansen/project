@@ -1,35 +1,12 @@
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-  tesla_model: string;
-  tesla_year: number;
-  preferred_charge_percentage: number;
-  created_at: string;
-  updated_at: string;
-}
+// Re-export database types for compatibility
+import type { Database } from "./database";
+export type { Database, Tables, TablesInsert, TablesUpdate } from "./database";
 
-export interface ChargingSession {
-  id: string;
-  user_id: string;
-  charger_id: number;
-  current_charge: number;
-  target_charge: number;
-  start_time: string;
-  estimated_end_time: string;
-  status: 'charging' | 'completed';
-  created_at: string;
-}
-
-export interface QueueEntry {
-  id: string;
-  user_id: string;
-  current_charge: number;
-  target_charge: number;
-  position: number;
-  created_at: string;
-  user?: User;
-}
+// Legacy type aliases for backward compatibility
+export type User = Database["public"]["Tables"]["users"]["Row"];
+export type ChargingSession =
+  Database["public"]["Tables"]["charging_sessions"]["Row"];
+export type QueueEntry = Database["public"]["Tables"]["queue_entries"]["Row"];
 
 export interface Charger {
   id: number;
@@ -38,4 +15,10 @@ export interface Charger {
   current_session?: ChargingSession & { user?: User };
 }
 
-export type TeslaModel = 'Model S' | 'Model 3' | 'Model X' | 'Model Y' | 'Cybertruck' | 'Roadster';
+export type TeslaModel =
+  | "Model S"
+  | "Model 3"
+  | "Model X"
+  | "Model Y"
+  | "Cybertruck"
+  | "Roadster";

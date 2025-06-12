@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { X, Battery, Zap } from 'lucide-react';
+import React, { useState } from "react";
+import { X, Battery, Zap } from "lucide-react";
 
 interface ChargingDialogProps {
   isOpen: boolean;
@@ -9,12 +9,12 @@ interface ChargingDialogProps {
   defaultTarget?: number;
 }
 
-export function ChargingDialog({ 
-  isOpen, 
-  onClose, 
-  onSubmit, 
-  title, 
-  defaultTarget = 80 
+export function ChargingDialog({
+  isOpen,
+  onClose,
+  onSubmit,
+  title,
+  defaultTarget = 80,
 }: ChargingDialogProps) {
   const [currentCharge, setCurrentCharge] = useState(20);
   const [targetCharge, setTargetCharge] = useState(defaultTarget);
