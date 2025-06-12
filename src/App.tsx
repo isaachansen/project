@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "sonner";
 import { useAuth } from "./hooks/useAuth";
 import { useCharging } from "./hooks/useCharging";
 import { LoginScreen } from "./components/LoginScreen";
@@ -9,7 +9,12 @@ import { ChargingStation } from "./components/ChargingStation";
 import { ChargingDialog } from "./components/ChargingDialog";
 import { QueueList } from "./components/QueueList";
 import { SettingsDialog } from "./components/SettingsDialog";
+import { RealtimeDemo } from "./components/RealtimeDemo";
+import { RealtimeDebug } from "./components/RealtimeDebug";
 import { Zap, Users, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Toaster } from "sonner";
 
 function App() {
   const {
@@ -44,22 +49,24 @@ function App() {
   if (!supabaseUrl || !supabaseKey || supabaseUrl.includes("placeholder")) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-2xl p-8 shadow-lg text-center">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <AlertCircle className="w-8 h-8 text-red-600" />
-          </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">
-            Supabase Configuration Required
-          </h2>
-          <p className="text-gray-600 mb-4">
-            Please configure your Supabase environment variables in the .env
-            file:
-          </p>
-          <div className="bg-gray-50 rounded-lg p-4 text-left text-sm font-mono">
-            <div>VITE_SUPABASE_URL=your_supabase_url</div>
-            <div>VITE_SUPABASE_ANON_KEY=your_anon_key</div>
-          </div>
-        </div>
+        <Card className="max-w-md w-full">
+          <CardContent className="p-8 text-center">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <AlertCircle className="w-8 h-8 text-red-600" />
+            </div>
+            <CardTitle className="text-xl font-bold text-gray-900 mb-2">
+              Supabase Configuration Required
+            </CardTitle>
+            <p className="text-gray-600 mb-4">
+              Please configure your Supabase environment variables in the .env
+              file:
+            </p>
+            <div className="bg-gray-50 rounded-lg p-4 text-left text-sm font-mono">
+              <div>VITE_SUPABASE_URL=your_supabase_url</div>
+              <div>VITE_SUPABASE_ANON_KEY=your_anon_key</div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -67,21 +74,23 @@ function App() {
   if (error) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-2xl p-8 shadow-lg text-center">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <AlertCircle className="w-8 h-8 text-red-600" />
-          </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">
-            Connection Error
-          </h2>
-          <p className="text-gray-600 mb-4">{error}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Retry
-          </button>
-        </div>
+        <Card className="max-w-md w-full">
+          <CardContent className="p-8 text-center">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <AlertCircle className="w-8 h-8 text-red-600" />
+            </div>
+            <CardTitle className="text-xl font-bold text-gray-900 mb-2">
+              Connection Error
+            </CardTitle>
+            <p className="text-gray-600 mb-4">{error}</p>
+            <Button
+              onClick={() => window.location.reload()}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              Retry
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -188,10 +197,10 @@ function App() {
     return "Join Queue";
   };
 
-  const getActionButtonColor = () => {
-    if (userSession) return "bg-red-600 hover:bg-red-700";
-    if (userQueueEntry) return "bg-gray-600 hover:bg-gray-700";
-    return "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800";
+  const getActionButtonVariant = () => {
+    if (userSession) return "destructive";
+    if (userQueueEntry) return "secondary";
+    return "default";
   };
 
   const handleActionClick = () => {
@@ -214,6 +223,12 @@ function App() {
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-8">
+          {/* Realtime Status */}
+          <RealtimeDemo />
+
+          {/* Realtime Debug */}
+          <RealtimeDebug />
+
           {/* Charging Stations */}
           <div>
             <h2 className="text-2xl font-bold text-gray-900 mb-6">
@@ -228,19 +243,19 @@ function App() {
 
           {/* Action Button */}
           <div className="flex justify-center">
-            <button
+            <Button
               onClick={handleActionClick}
-              className={`px-8 py-4 text-white font-semibold rounded-2xl transition-all duration-200 transform hover:scale-105 ${getActionButtonColor()}`}
+              variant={getActionButtonVariant()}
+              size="lg"
+              className="px-8 py-4 text-white font-semibold h-auto transition-all duration-200 transform hover:scale-105"
             >
-              <div className="flex items-center space-x-2">
-                {userSession ? (
-                  <Zap className="w-5 h-5" />
-                ) : (
-                  <Users className="w-5 h-5" />
-                )}
-                <span>{getActionButtonText()}</span>
-              </div>
-            </button>
+              {userSession ? (
+                <Zap className="w-5 h-5 mr-2" />
+              ) : (
+                <Users className="w-5 h-5 mr-2" />
+              )}
+              {getActionButtonText()}
+            </Button>
           </div>
 
           {/* Queue */}
@@ -274,7 +289,16 @@ function App() {
         }}
       />
 
-      <Toaster position="top-right" />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: "white",
+            border: "1px solid #e5e7eb",
+            color: "#374151",
+          },
+        }}
+      />
     </div>
   );
 }
