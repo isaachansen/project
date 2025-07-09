@@ -1,47 +1,232 @@
 import { TeslaModel } from "../types";
-import { teslaVehiclesData, TeslaVehicleData } from "./teslaVehicles.data";
 
-// Import the local asset images
-import modelSImage from "../assets/model-s.avif";
-import model3NewImage from "../assets/model-3-new.avif";
-import model3OldImage from "../assets/model-3-old.png";
-import modelXImage from "../assets/model-x.avif";
-import modelYNewImage from "../assets/model-y-new.avif";
-import cybertruckImage from "../assets/cybertruck.avif";
-
-export * from "./teslaVehicles.data";
-
-export interface TeslaVehicle extends Omit<TeslaVehicleData, "imageName"> {
-  imageUrl: string;
+export interface TeslaVehicleData {
+  model: TeslaModel;
+  trim: string;
+  yearStart: number;
+  yearEnd: number;
+  battery_kWh: number;
+  charge_time_0_to_80: string;
+  imageName: string;
 }
 
-const imageMap: Record<string, string> = {
-  "model-s.avif": modelSImage,
-  "model-3-new.avif": model3NewImage,
-  "model-3-old.png": model3OldImage,
-  "model-x.avif": modelXImage,
-  "model-y-new.avif": modelYNewImage,
-  "cybertruck.avif": cybertruckImage,
-};
+export const teslaVehiclesData: TeslaVehicleData[] = [
+  // Model S
+  {
+    model: "Model S",
+    trim: "2016 (60 / 60D)",
+    yearStart: 2016,
+    yearEnd: 2016,
+    battery_kWh: 60,
+    charge_time_0_to_80: "8h 54m",
+    imageName: "model-s.avif",
+  },
+  {
+    model: "Model S",
+    trim: "2016 (75 / 75D)",
+    yearStart: 2016,
+    yearEnd: 2016,
+    battery_kWh: 72,
+    charge_time_0_to_80: "10h 42m",
+    imageName: "model-s.avif",
+  },
+  {
+    model: "Model S",
+    trim: "2016 (90D)",
+    yearStart: 2016,
+    yearEnd: 2016,
+    battery_kWh: 86,
+    charge_time_0_to_80: "12h 48m",
+    imageName: "model-s.avif",
+  },
+  {
+    model: "Model S",
+    trim: "2016-2020 (100D / P100D)",
+    yearStart: 2016,
+    yearEnd: 2020,
+    battery_kWh: 98,
+    charge_time_0_to_80: "14h 36m",
+    imageName: "model-s.avif",
+  },
+  {
+    model: "Model S",
+    trim: "2021-2025 (Long Range)",
+    yearStart: 2021,
+    yearEnd: 2025,
+    battery_kWh: 100,
+    charge_time_0_to_80: "14h 54m",
+    imageName: "model-s.avif",
+  },
+  {
+    model: "Model S",
+    trim: "2021-2025 (Plaid)",
+    yearStart: 2021,
+    yearEnd: 2025,
+    battery_kWh: 100,
+    charge_time_0_to_80: "14h 54m",
+    imageName: "model-s.avif",
+  },
 
-export const teslaVehicles: TeslaVehicle[] = teslaVehiclesData.map(
-  (vehicle) => ({
-    ...vehicle,
-    imageUrl: imageMap[vehicle.imageName],
-  })
-);
+  // Model 3 - Use old image for vehicles that don't include 2025
+  {
+    model: "Model 3",
+    trim: "2017-2020 (Std Range / SR+)",
+    yearStart: 2017,
+    yearEnd: 2020,
+    battery_kWh: 50,
+    charge_time_0_to_80: "7h 24m",
+    imageName: "model-3-old.png", // Doesn't include 2025, use old image
+  },
+  {
+    model: "Model 3",
+    trim: "2021-2025 (RWD / Std Range)",
+    yearStart: 2021,
+    yearEnd: 2025,
+    battery_kWh: 58,
+    charge_time_0_to_80: "8h 36m",
+    imageName: "model-3-new.avif", // Includes 2025, use new image
+  },
+  {
+    model: "Model 3",
+    trim: "2018-2025 (Long Range)",
+    yearStart: 2018,
+    yearEnd: 2025,
+    battery_kWh: 79,
+    charge_time_0_to_80: "11h 48m",
+    imageName: "model-3-new.avif", // Includes 2025, use new image
+  },
+  {
+    model: "Model 3",
+    trim: "2018-2025 (Performance)",
+    yearStart: 2018,
+    yearEnd: 2025,
+    battery_kWh: 79,
+    charge_time_0_to_80: "11h 48m",
+    imageName: "model-3-new.avif", // Includes 2025, use new image
+  },
 
-// Override the helper functions to return the correct type
-export function getVehiclesByModel(model: TeslaModel): TeslaVehicle[] {
-  return teslaVehicles.filter((v) => v.model === model);
+  // Model X
+  {
+    model: "Model X",
+    trim: "2016 (60D)",
+    yearStart: 2016,
+    yearEnd: 2016,
+    battery_kWh: 60,
+    charge_time_0_to_80: "8h 54m",
+    imageName: "model-x.avif",
+  },
+  {
+    model: "Model X",
+    trim: "2016 (75D)",
+    yearStart: 2016,
+    yearEnd: 2016,
+    battery_kWh: 72,
+    charge_time_0_to_80: "10h 42m",
+    imageName: "model-x.avif",
+  },
+  {
+    model: "Model X",
+    trim: "2016 (90D)",
+    yearStart: 2016,
+    yearEnd: 2016,
+    battery_kWh: 86,
+    charge_time_0_to_80: "12h 48m",
+    imageName: "model-x.avif",
+  },
+  {
+    model: "Model X",
+    trim: "2016-2020 (100D / P100D)",
+    yearStart: 2016,
+    yearEnd: 2020,
+    battery_kWh: 98,
+    charge_time_0_to_80: "14h 36m",
+    imageName: "model-x.avif",
+  },
+  {
+    model: "Model X",
+    trim: "2021-2025 (Long Range)",
+    yearStart: 2021,
+    yearEnd: 2025,
+    battery_kWh: 100,
+    charge_time_0_to_80: "14h 54m",
+    imageName: "model-x.avif",
+  },
+  {
+    model: "Model X",
+    trim: "2021-2025 (Plaid)",
+    yearStart: 2021,
+    yearEnd: 2025,
+    battery_kWh: 100,
+    charge_time_0_to_80: "14h 54m",
+    imageName: "model-x.avif",
+  },
+
+  // Model Y - Use old image for vehicles that don't include 2025
+  {
+    model: "Model Y",
+    trim: "2020-2025 (Long Range)",
+    yearStart: 2020,
+    yearEnd: 2025,
+    battery_kWh: 79,
+    charge_time_0_to_80: "11h 48m",
+    imageName: "model-y-new.avif", // Includes 2025, use new image
+  },
+  {
+    model: "Model Y",
+    trim: "2020-2025 (Performance)",
+    yearStart: 2020,
+    yearEnd: 2025,
+    battery_kWh: 79,
+    charge_time_0_to_80: "11h 48m",
+    imageName: "model-y-new.avif", // Includes 2025, use new image
+  },
+  {
+    model: "Model Y",
+    trim: "2022-2025 (RWD / Std Range)",
+    yearStart: 2022,
+    yearEnd: 2025,
+    battery_kWh: 58,
+    charge_time_0_to_80: "8h 36m",
+    imageName: "model-y-new.avif", // Includes 2025, use new image
+  },
+
+  // Cybertruck
+  {
+    model: "Cybertruck",
+    trim: "2024-2025 (AWD)",
+    yearStart: 2024,
+    yearEnd: 2025,
+    battery_kWh: 123,
+    charge_time_0_to_80: "18h 18m",
+    imageName: "cybertruck.avif",
+  },
+  {
+    model: "Cybertruck",
+    trim: "2024-2025 (Cyberbeast)",
+    yearStart: 2024,
+    yearEnd: 2025,
+    battery_kWh: 123,
+    charge_time_0_to_80: "18h 18m",
+    imageName: "cybertruck.avif",
+  },
+];
+
+// Helper functions
+export function getUniqueModels(): TeslaModel[] {
+  const models = [...new Set(teslaVehiclesData.map((v) => v.model))];
+  return models as TeslaModel[];
+}
+
+export function getVehiclesByModel(model: TeslaModel): TeslaVehicleData[] {
+  return teslaVehiclesData.filter((v) => v.model === model);
 }
 
 export function getVehicleByModelAndTrim(
   model: TeslaModel,
   trim: string
-): TeslaVehicle | null {
+): TeslaVehicleData | null {
   return (
-    teslaVehicles.find((v) => v.model === model && v.trim === trim) || null
+    teslaVehiclesData.find((v) => v.model === model && v.trim === trim) || null
   );
 }
 

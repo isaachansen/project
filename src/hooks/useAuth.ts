@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { User as AuthUser } from "@supabase/supabase-js";
 import { AuthService, User, UserInsert, UserUpdate } from "../lib/auth";
 import { supabase } from "../lib/supabase";
@@ -18,38 +18,10 @@ export function useAuth() {
     error: null,
   });
 
-  const loadingProfileRef = useRef(false);
-  const profileCacheRef = useRef<{ userId: string; profile: User } | null>(
-    null
-  );
-
-  // Load user profile with proper error handling and caching
   const loadUserProfile = useCallback(async (userId: string) => {
-    // Check cache first
-    if (profileCacheRef.current?.userId === userId) {
-      setState((prev) => ({
-        ...prev,
-        userProfile: profileCacheRef.current!.profile,
-      }));
-      return;
-    }
-
-    // Prevent multiple simultaneous loads
-    if (loadingProfileRef.current) {
-      return;
-    }
-
-    loadingProfileRef.current = true;
-
     try {
       const profile = await AuthService.getUserProfile(userId);
-      if (profile) {
-        // Cache the profile
-        profileCacheRef.current = { userId, profile };
-        setState((prev) => ({ ...prev, userProfile: profile }));
-      } else {
-        setState((prev) => ({ ...prev, userProfile: null }));
-      }
+      setState((prev) => ({ ...prev, userProfile: profile }));
     } catch (error) {
       console.error("❌ Failed to load user profile:", error);
       setState((prev) => ({
@@ -58,18 +30,15 @@ export function useAuth() {
         error:
           error instanceof Error ? error.message : "Failed to load profile",
       }));
-    } finally {
-      loadingProfileRef.current = false;
     }
   }, []);
 
-  // Initialize auth state
   useEffect(() => {
     let mounted = true;
 
     const initializeAuth = async () => {
+      setState((prev) => ({ ...prev, loading: true }));
       try {
-        // First get the session to ensure auth state is properly loaded
         const {
           data: { session },
         } = await supabase.auth.getSession();
@@ -77,27 +46,10 @@ export function useAuth() {
         if (!mounted) return;
 
         if (session?.user) {
-          setState((prev) => ({ ...prev, user: session.user, loading: false }));
-          // Only load profile if we don't already have it cached
-          if (
-            !profileCacheRef.current ||
-            profileCacheRef.current.userId !== session.user.id
-          ) {
-            await loadUserProfile(session.user.id);
-          } else {
-            // Use cached profile
-            setState((prev) => ({
-              ...prev,
-              userProfile: profileCacheRef.current!.profile,
-            }));
-          }
+          setState((prev) => ({ ...prev, user: session.user }));
+          await loadUserProfile(session.user.id);
         } else {
-          setState((prev) => ({
-            ...prev,
-            user: null,
-            userProfile: null,
-            loading: false,
-          }));
+          setState((prev) => ({ ...prev, user: null, userProfile: null }));
         }
       } catch (error) {
         if (!mounted) return;
@@ -105,16 +57,18 @@ export function useAuth() {
         console.error("🚨 Auth initialization error:", error);
         setState((prev) => ({
           ...prev,
-          loading: false,
           error:
             error instanceof Error ? error.message : "Authentication failed",
         }));
+      } finally {
+        if (mounted) {
+          setState((prev) => ({ ...prev, loading: false }));
+        }
       }
     };
 
     initializeAuth();
 
-    // Listen for auth state changes
     const {
       data: { subscription },
     } = AuthService.onAuthStateChange(async (event, session) => {
@@ -127,12 +81,12 @@ export function useAuth() {
         setState((prev) => ({ ...prev, user: authSession.user! }));
         await loadUserProfile(authSession.user.id);
       } else {
-        // Clear cache on sign out
-        profileCacheRef.current = null;
         setState((prev) => ({ ...prev, user: null, userProfile: null }));
       }
 
-      setState((prev) => ({ ...prev, loading: false }));
+      if (mounted) {
+        setState((prev) => ({ ...prev, loading: false }));
+      }
     });
 
     return () => {
@@ -141,7 +95,6 @@ export function useAuth() {
     };
   }, [loadUserProfile]);
 
-  // Auth actions
   const signIn = useCallback(async () => {
     try {
       setState((prev) => ({ ...prev, error: null }));

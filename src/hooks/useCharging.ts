@@ -2,8 +2,6 @@ import { useState, useEffect, useCallback } from "react";
 import { ChargingService } from "../lib/charging";
 import { Charger, QueueEntry, ChargingSession } from "../types";
 import { supabase } from "../lib/supabase";
-import { toast } from "sonner";
-import { useRealtimeContext } from "../contexts/RealtimeContext";
 
 export function useCharging(userId?: string) {
   const [chargers, setChargers] = useState<Charger[]>([]);
@@ -11,9 +9,9 @@ export function useCharging(userId?: string) {
   const [userSession, setUserSession] = useState<ChargingSession | null>(null);
   const [userQueueEntry, setUserQueueEntry] = useState<QueueEntry | null>(null);
   const [loading, setLoading] = useState(true);
-  const { setRealtimeState } = useRealtimeContext();
 
   const loadData = useCallback(async () => {
+    setLoading(true); // Avoids UI flicker on reloads
     try {
       const [chargersData, queueData] = await Promise.all([
         ChargingService.getChargers(),
@@ -28,7 +26,6 @@ export function useCharging(userId?: string) {
           ChargingService.getUserChargingSession(userId),
           ChargingService.getUserQueueEntry(userId),
         ]);
-
         setUserSession(sessionData);
         setUserQueueEntry(queueEntryData);
       }
@@ -43,25 +40,15 @@ export function useCharging(userId?: string) {
 
   useEffect(() => {
     if (!userId) {
-      setRealtimeState({ isConnected: false, connectionStatus: "NO_USER" });
+      setLoading(false);
       return;
     }
 
     loadData();
 
-    console.log("🔄 Setting up realtime connection for user:", userId);
-    const channel = supabase.channel("charging_app", {
-      config: {
-        broadcast: { self: false },
-        presence: { key: userId },
-      },
-    });
+    const channel = supabase.channel(`charging-user-${userId}`);
 
-    const handleDataChange = (
-      payload: any,
-      type: "CHARGING" | "QUEUE" | "USER"
-    ) => {
-      console.log(`📦 Realtime event received: ${type}`, payload);
+    const handleDataChange = () => {
       loadData();
     };
 
@@ -69,51 +56,24 @@ export function useCharging(userId?: string) {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "charging_sessions" },
-        (p) => handleDataChange(p, "CHARGING")
+        handleDataChange
       )
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "queue_entries" },
-        (p) => handleDataChange(p, "QUEUE")
+        handleDataChange
       )
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "users" },
-        (p) => handleDataChange(p, "USER")
+        handleDataChange
       )
-      .on("presence", { event: "sync" }, () => {
-        const count = Object.keys(channel.presenceState()).length;
-        setRealtimeState({ connectionCount: count });
-      })
-      .subscribe((status, err) => {
-        const timestamp = new Date().toISOString();
-        const connectionStatus =
-          err?.message || status.toUpperCase().replace(/_/g, " ");
-        const isConnected = status === "SUBSCRIBED";
-
-        setRealtimeState({
-          isConnected,
-          connectionStatus,
-        });
-
-        console.log(
-          `📡 [${timestamp}] Realtime status: ${connectionStatus}`,
-          err ? err : ""
-        );
-      });
+      .subscribe();
 
     return () => {
-      console.log("🧹 Cleaning up realtime connection...");
-      supabase.removeChannel(channel).catch((error) => {
-        console.error("Error removing channel:", error);
-      });
-      setRealtimeState({
-        isConnected: false,
-        connectionStatus: "DISCONNECTED",
-        connectionCount: 0,
-      });
+      supabase.removeChannel(channel);
     };
-  }, [userId, loadData, setRealtimeState]);
+  }, [userId, loadData]);
 
   const startCharging = async (
     chargerId: number,

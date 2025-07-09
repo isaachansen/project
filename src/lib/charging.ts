@@ -143,11 +143,9 @@ export class ChargingService {
 
       // Send Slack notification
       const slackService = getSlackService();
-      console.log("🔔 Slack service available:", !!slackService);
       if (slackService && userProfile) {
         try {
-          console.log("🔔 Sending charger join notification...");
-          await slackService.notifyChargerJoin(
+          slackService.notifyChargerJoin(
             userProfile,
             chargerId,
             currentCharge,
@@ -204,16 +202,11 @@ export class ChargingService {
 
       // Send Slack notification
       const slackService = getSlackService();
-      console.log(
-        "🔔 Slack service available for charger leave:",
-        !!slackService
-      );
       if (slackService && sessionData?.user) {
         try {
-          console.log("🔔 Sending charger leave notification...");
           const wasCompleted =
             sessionData.current_charge >= sessionData.target_charge;
-          await slackService.notifyChargerLeave(
+          slackService.notifyChargerLeave(
             sessionData.user as User,
             sessionData.charger_id,
             sessionData.current_charge,
@@ -275,11 +268,9 @@ export class ChargingService {
 
       // Send Slack notification
       const slackService = getSlackService();
-      console.log("🔔 Slack service available for queue join:", !!slackService);
       if (slackService && userData) {
         try {
-          console.log("🔔 Sending queue join notification...");
-          await slackService.notifyQueueJoin(
+          slackService.notifyQueueJoin(
             userData,
             position,
             currentCharge,
@@ -350,14 +341,9 @@ export class ChargingService {
 
       // Send Slack notification
       const slackService = getSlackService();
-      console.log(
-        "🔔 Slack service available for queue leave:",
-        !!slackService
-      );
       if (slackService && queueData?.user) {
         try {
-          console.log("🔔 Sending queue leave notification...");
-          await slackService.notifyQueueLeave(
+          slackService.notifyQueueLeave(
             queueData.user as User,
             queueData.position,
             "left"
@@ -377,7 +363,7 @@ export class ChargingService {
 
       if (slackService && count === 0) {
         try {
-          await slackService.notifyQueueUpdate(0);
+          slackService.notifyQueueUpdate(0);
         } catch (slackError) {
           console.error("Failed to send Slack notification:", slackError);
         }
@@ -459,7 +445,7 @@ export class ChargingService {
           const slackService = getSlackService();
           if (slackService && nextInQueue.user) {
             try {
-              await slackService.notifyQueueLeave(
+              slackService.notifyQueueLeave(
                 nextInQueue.user as User,
                 nextInQueue.position,
                 "moved_to_charger"

@@ -8,9 +8,9 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "tsx server.ts",
+    "server:dev": "tsx watch server.ts",
     "server:build": "tsc -p tsconfig.server.json",
-    "server:prod": "node dist/server.js"
+    "server": "npm run server:build && node dist/server.js"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.10",

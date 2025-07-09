@@ -1,0 +1,26 @@
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { AlertCircle } from "lucide-react";
+
+interface ErrorScreenProps {
+  error: string;
+}
+
+export function ErrorScreen({ error }: ErrorScreenProps) {
+  return (
+    <div className="min-h-screen gradient-bg flex items-center justify-center p-4">
+      <Card className="max-w-md w-full card-shadow-lg border-gray-200 dark:border-gray-600">
+        <CardContent className="p-8 text-center">
+          <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <AlertCircle className="w-8 h-8 text-red-400" />
+          </div>
+          <CardTitle className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+            Connection Error
+          </CardTitle>
+          <p className="text-gray-700 dark:text-gray-300 mb-4">{error}</p>
+          <Button onClick={() => window.location.reload()}>Retry</Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
