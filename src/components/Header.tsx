@@ -1,20 +1,9 @@
 import { useState } from "react";
 import { User } from "../types";
-import {
-  Zap,
-  Settings,
-  LogOut,
-  Car,
-  Wifi,
-  WifiOff,
-  Users,
-  Sun,
-  Moon,
-} from "lucide-react";
+import { Zap, Settings, LogOut, Car, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { useRealtimeStatus } from "../hooks/useRealtimeStatus";
 import { useTheme } from "../hooks/useTheme";
 import nikolaLogo from "../assets/nikola.png";
 
@@ -26,8 +15,6 @@ interface HeaderProps {
 
 export function Header({ user, onSignOut, onOpenSettings }: HeaderProps) {
   const [showDropdown, setShowDropdown] = useState(false);
-  const { isConnected, connectionCount, connectionStatus } =
-    useRealtimeStatus();
   const { theme, toggleTheme } = useTheme();
 
   return (
