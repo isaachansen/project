@@ -96,8 +96,10 @@ export type Database = {
           name: string;
           preferred_charge_percentage: number | null;
           tesla_model: string;
+          tesla_trim: string | null;
           tesla_year: number;
           updated_at: string | null;
+          vehicle_spec: Json | null;
         };
         Insert: {
           created_at?: string | null;
@@ -106,8 +108,10 @@ export type Database = {
           name: string;
           preferred_charge_percentage?: number | null;
           tesla_model: string;
+          tesla_trim?: string | null;
           tesla_year: number;
           updated_at?: string | null;
+          vehicle_spec?: Json | null;
         };
         Update: {
           created_at?: string | null;
@@ -116,8 +120,10 @@ export type Database = {
           name?: string;
           preferred_charge_percentage?: number | null;
           tesla_model?: string;
+          tesla_trim?: string | null;
           tesla_year?: number;
           updated_at?: string | null;
+          vehicle_spec?: Json | null;
         };
         Relationships: [];
       };

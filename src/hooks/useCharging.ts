@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ChargingService } from "../lib/charging";
 import { Charger, QueueEntry, ChargingSession } from "../types";
 import { supabase } from "../lib/supabase";
 import { toast } from "sonner";
+import { useRealtimeContext } from "../contexts/RealtimeContext";
 
 export function useCharging(userId?: string) {
   const [chargers, setChargers] = useState<Charger[]>([]);
@@ -10,14 +11,9 @@ export function useCharging(userId?: string) {
   const [userSession, setUserSession] = useState<ChargingSession | null>(null);
   const [userQueueEntry, setUserQueueEntry] = useState<QueueEntry | null>(null);
   const [loading, setLoading] = useState(true);
+  const { setRealtimeState } = useRealtimeContext();
 
-  // Simplified subscription tracking with retry logic
-  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
-  const isSetupRef = useRef(false);
-  const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const retryCountRef = useRef(0);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       const [chargersData, queueData] = await Promise.all([
         ChargingService.getChargers(),
@@ -37,158 +33,87 @@ export function useCharging(userId?: string) {
         setUserQueueEntry(queueEntryData);
       }
     } catch (error) {
-      // 406 errors are normal for empty tables, don't show as errors
       if (error instanceof Error && !error.message.includes("406")) {
         console.error("Error loading charging data:", error);
       }
     } finally {
       setLoading(false);
     }
-  };
+  }, [userId]);
 
-  const setupRealtime = () => {
-    if (isSetupRef.current || channelRef.current) {
-      console.log("Realtime already setup, skipping...");
+  useEffect(() => {
+    if (!userId) {
+      setRealtimeState({ isConnected: false, connectionStatus: "NO_USER" });
       return;
     }
 
-    console.log(
-      "🔄 Setting up realtime (attempt",
-      retryCountRef.current + 1,
-      ")..."
-    );
-    isSetupRef.current = true;
+    loadData();
 
-    // Create a single channel with better configuration
-    const channel = supabase.channel(`charging_app_${Date.now()}`, {
+    console.log("🔄 Setting up realtime connection for user:", userId);
+    const channel = supabase.channel("charging_app", {
       config: {
         broadcast: { self: false },
-        presence: { key: "charging_app" },
+        presence: { key: userId },
       },
     });
 
-    // Listen to all charging_sessions changes
-    channel.on(
-      "postgres_changes",
-      { event: "*", schema: "public", table: "charging_sessions" },
-      (payload) => {
-        console.log("🔌 Charging session change:", payload);
+    const handleDataChange = (
+      payload: any,
+      type: "CHARGING" | "QUEUE" | "USER"
+    ) => {
+      console.log(`📦 Realtime event received: ${type}`, payload);
+      loadData();
+    };
 
-        if (payload.eventType === "INSERT") {
-          toast.success("⚡ Someone started charging!");
-        } else if (payload.eventType === "DELETE") {
-          toast.info("🔌 Charging station available!");
-        }
+    channel
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "charging_sessions" },
+        (p) => handleDataChange(p, "CHARGING")
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "queue_entries" },
+        (p) => handleDataChange(p, "QUEUE")
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "users" },
+        (p) => handleDataChange(p, "USER")
+      )
+      .on("presence", { event: "sync" }, () => {
+        const count = Object.keys(channel.presenceState()).length;
+        setRealtimeState({ connectionCount: count });
+      })
+      .subscribe((status, err) => {
+        const timestamp = new Date().toISOString();
+        const connectionStatus =
+          err?.message || status.toUpperCase().replace(/_/g, " ");
+        const isConnected = status === "SUBSCRIBED";
 
-        // Refresh data
-        loadData();
-      }
-    );
+        setRealtimeState({
+          isConnected,
+          connectionStatus,
+        });
 
-    // Listen to all queue_entries changes
-    channel.on(
-      "postgres_changes",
-      { event: "*", schema: "public", table: "queue_entries" },
-      (payload) => {
-        console.log("👥 Queue change:", payload);
-
-        if (payload.eventType === "INSERT") {
-          toast.info("👥 Someone joined the queue");
-        } else if (payload.eventType === "DELETE") {
-          toast.info("👋 Someone left the queue");
-        }
-
-        // Refresh data
-        loadData();
-      }
-    );
-
-    // Listen to user profile changes
-    channel.on(
-      "postgres_changes",
-      { event: "UPDATE", schema: "public", table: "users" },
-      (payload) => {
-        console.log("👤 User profile change:", payload);
-        loadData();
-      }
-    );
-
-    // Subscribe to the channel with better error handling
-    channel.subscribe((status) => {
-      console.log("📡 Charging realtime status:", status);
-
-      if (status === "SUBSCRIBED") {
-        console.log("✅ Charging realtime connected successfully!");
-        retryCountRef.current = 0; // Reset retry count on success
-        toast.success("🔄 Live updates active!", { duration: 2000 });
-      } else if (status === "TIMED_OUT") {
-        console.warn("⏰ Realtime connection timed out");
-        handleConnectionFailure();
-      } else if (status === "CHANNEL_ERROR") {
-        console.error("❌ Realtime connection failed");
-        handleConnectionFailure();
-      } else if (status === "CLOSED") {
-        console.log("🔒 Realtime connection closed");
-        handleConnectionFailure();
-      }
-    });
-
-    channelRef.current = channel;
-  };
-
-  const handleConnectionFailure = () => {
-    retryCountRef.current += 1;
-    const maxRetries = 3;
-
-    if (retryCountRef.current <= maxRetries) {
-      const retryDelay = Math.min(5000 * retryCountRef.current, 15000); // Exponential backoff
-
-      console.log(
-        `🔄 Retrying realtime connection in ${retryDelay / 1000}s (attempt ${retryCountRef.current}/${maxRetries})`
-      );
-
-      if (retryTimeoutRef.current) {
-        clearTimeout(retryTimeoutRef.current);
-      }
-
-      retryTimeoutRef.current = setTimeout(() => {
-        cleanup();
-        setTimeout(setupRealtime, 1000);
-      }, retryDelay);
-    } else {
-      console.log("❌ Max retries reached, giving up on realtime");
-      toast.error("Realtime unavailable - using manual refresh", {
-        duration: 3000,
+        console.log(
+          `📡 [${timestamp}] Realtime status: ${connectionStatus}`,
+          err ? err : ""
+        );
       });
-    }
-  };
-
-  const cleanup = () => {
-    if (retryTimeoutRef.current) {
-      clearTimeout(retryTimeoutRef.current);
-      retryTimeoutRef.current = null;
-    }
-
-    if (channelRef.current) {
-      console.log("🧹 Cleaning up realtime...");
-      supabase.removeChannel(channelRef.current);
-      channelRef.current = null;
-      isSetupRef.current = false;
-    }
-  };
-
-  useEffect(() => {
-    // Load initial data
-    loadData();
-
-    // Setup realtime with a delay to ensure proper initialization
-    const timer = setTimeout(setupRealtime, 1000);
 
     return () => {
-      clearTimeout(timer);
-      cleanup();
+      console.log("🧹 Cleaning up realtime connection...");
+      supabase.removeChannel(channel).catch((error) => {
+        console.error("Error removing channel:", error);
+      });
+      setRealtimeState({
+        isConnected: false,
+        connectionStatus: "DISCONNECTED",
+        connectionCount: 0,
+      });
     };
-  }, [userId]);
+  }, [userId, loadData, setRealtimeState]);
 
   const startCharging = async (
     chargerId: number,
@@ -204,8 +129,7 @@ export function useCharging(userId?: string) {
         currentCharge,
         targetCharge
       );
-      // Immediate refresh for better UX
-      setTimeout(loadData, 500);
+      await loadData();
     } catch (error) {
       console.error("Error starting charging:", error);
       throw error;
@@ -213,11 +137,11 @@ export function useCharging(userId?: string) {
   };
 
   const stopCharging = async () => {
-    if (!userSession) throw new Error("No active charging session");
+    if (!userId) throw new Error("User not logged in");
 
     try {
-      await ChargingService.stopCharging(userSession.id);
-      setTimeout(loadData, 500);
+      await ChargingService.stopCharging(userId);
+      await loadData();
     } catch (error) {
       console.error("Error stopping charging:", error);
       throw error;
@@ -229,7 +153,7 @@ export function useCharging(userId?: string) {
 
     try {
       await ChargingService.joinQueue(userId, currentCharge, targetCharge);
-      setTimeout(loadData, 500);
+      await loadData();
     } catch (error) {
       console.error("Error joining queue:", error);
       throw error;
@@ -241,15 +165,12 @@ export function useCharging(userId?: string) {
 
     try {
       await ChargingService.leaveQueue(userId);
-      setTimeout(loadData, 500);
+      await loadData();
     } catch (error) {
       console.error("Error leaving queue:", error);
       throw error;
     }
   };
-
-  const availableChargers = chargers.filter((c) => !c.is_occupied);
-  const hasAvailableCharger = availableChargers.length > 0;
 
   return {
     chargers,
@@ -257,11 +178,9 @@ export function useCharging(userId?: string) {
     userSession,
     userQueueEntry,
     loading,
-    hasAvailableCharger,
     startCharging,
     stopCharging,
     joinQueue,
     leaveQueue,
-    refresh: loadData,
   };
 }

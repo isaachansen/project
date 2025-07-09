@@ -10,29 +10,33 @@ interface LoginScreenProps {
 
 export function LoginScreen({ onSignIn, loading }: LoginScreenProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center p-4">
+    <div className="min-h-screen gradient-bg flex items-center justify-center p-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <div className="flex justify-center mb-6">
             <div className="relative">
-              <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full flex items-center justify-center">
+              <div className="w-20 h-20 bg-gradient-to-r from-primary to-primary/80 rounded-full flex items-center justify-center charging-pulse card-shadow">
                 <Zap className="w-10 h-10 text-white" />
               </div>
-              <div className="absolute -top-2 -right-2 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+              <div className="absolute -top-2 -right-2 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center card-shadow">
                 <Car className="w-4 h-4 text-white" />
               </div>
             </div>
           </div>
-          <h2 className="text-4xl font-bold text-white mb-2">Tesla Charging</h2>
-          <p className="text-gray-400 text-lg">Queue Management System</p>
+          <h2 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+            Tesla Charging
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 text-lg">
+            Queue Management System
+          </p>
         </div>
 
-        <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700">
+        <Card className="glass-effect card-shadow-lg">
           <CardHeader className="text-center">
-            <CardTitle className="text-xl font-semibold text-white mb-2">
+            <CardTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
               Welcome Back
             </CardTitle>
-            <p className="text-gray-400">
+            <p className="text-gray-600 dark:text-gray-400">
               Sign in to manage your charging sessions
             </p>
           </CardHeader>
@@ -41,7 +45,7 @@ export function LoginScreen({ onSignIn, loading }: LoginScreenProps) {
             <Button
               onClick={onSignIn}
               disabled={loading}
-              className="w-full bg-white hover:bg-gray-100 text-gray-900 font-semibold py-4 px-6 h-auto transition duration-200 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              className="w-full bg-gray-900 dark:bg-gray-100 hover:bg-gray-800 dark:hover:bg-white text-gray-100 dark:text-gray-900 font-semibold py-4 px-6 h-auto transition duration-200 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none glow-on-hover card-shadow"
             >
               <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
                 <path
@@ -65,7 +69,7 @@ export function LoginScreen({ onSignIn, loading }: LoginScreenProps) {
             </Button>
 
             <div className="text-center">
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-600 dark:text-gray-500">
                 Secure authentication powered by Google
               </p>
             </div>
@@ -73,7 +77,7 @@ export function LoginScreen({ onSignIn, loading }: LoginScreenProps) {
         </Card>
 
         <div className="text-center">
-          <p className="text-gray-600 text-sm">
+          <p className="text-gray-600 dark:text-gray-500 text-sm">
             Join the charging queue and manage your Tesla's power needs
           </p>
         </div>
