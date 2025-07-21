@@ -1,0 +1,168 @@
+name: Deploy Tesla Charging Queue
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: "18"
+  CLIENT_PORT: 5173
+  SERVER_PORT: 3001
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint
+
+      # Add test step when you have tests
+      # - name: Run tests
+      #   run: npm test
+
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build client
+        run: npm run build
+
+      - name: Build server
+        run: npm run server:build
+
+      - name: Upload client build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: client-build
+          path: dist/
+          retention-days: 1
+
+      - name: Upload server build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-build
+          path: dist/
+          retention-days: 1
+
+  # Railway deployment - recommended approach is to use Railway's GitHub integration
+  # Just connect your GitHub repo in Railway dashboard for automatic deployments
+  deploy-railway:
+    name: Deploy to Railway
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy to Railway
+        run: railway up
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+  # Optional: Keep these for other deployment targets
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/develop'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: client-build
+          path: dist/
+
+      - name: Download server artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: server-build
+          path: dist/
+
+      - name: Deploy to staging server
+        run: |
+          echo "🚀 Deploying to staging environment..."
+          echo "This is where you would deploy to your staging server"
+          # Example deployment commands:
+          # rsync -avz dist/ user@staging-server:/path/to/app/
+          # ssh user@staging-server "pm2 restart tesla-charging-queue"
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: client-build
+          path: dist/
+
+      - name: Download server artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: server-build
+          path: dist/
+
+      - name: Deploy to production server
+        run: |
+          echo "🚀 Deploying to production environment..."
+          echo "This is where you would deploy to your production server"
+          # Example deployment commands:
+          # rsync -avz dist/ user@production-server:/path/to/app/
+          # ssh user@production-server "pm2 restart tesla-charging-queue"
+
+      - name: Health check
+        run: |
+          echo "🏥 Running health checks..."
+          # Add health check commands here
+          # curl -f http://your-production-url/health || exit 1

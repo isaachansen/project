@@ -10,7 +10,10 @@
     "preview": "vite preview",
     "server:dev": "tsx watch server.ts",
     "server:build": "tsc -p tsconfig.server.json",
-    "server": "npm run server:build && node dist/server.js"
+    "server": "npm run server:build && node dist/server.js",
+    "railway:build": "npm ci && npm run build && npm run server:build",
+    "railway:start": "node dist/server.js",
+    "start": "node dist/server.js"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.10",

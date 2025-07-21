@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import path from "path";
 import { getTrimData } from "./src/data/tesla-models";
 import { calculateChargingTime } from "./src/lib/charging-calculator";
 import { formatModelName } from "./src/lib/utils";
@@ -14,6 +15,9 @@ const PORT = process.env.PORT || 3001;
 // Enable CORS for all routes
 app.use(cors());
 app.use(express.json());
+
+// Serve static files from the React app build directory (for Railway deployment)
+app.use(express.static(path.join(__dirname, "../dist")));
 
 interface HealthResponse {
   status: "ok";
@@ -409,11 +413,20 @@ app.post(
   }
 );
 
+// Catch all handler: send back React's index.html file for any non-API routes
+// This must be after all API routes
+app.get("*", (req: Request, res: Response) => {
+  if (!req.path.startsWith("/api/") && !req.path.startsWith("/health")) {
+    res.sendFile(path.join(__dirname, "../dist/index.html"));
+  } else {
+    res.status(404).json({ error: "API endpoint not found" });
+  }
+});
+
 app.listen(PORT, () => {
-  // console.log(
-  //   `🚀 Slack notification server running on http://localhost:${PORT}`
-  // );
-  // console.log(`📋 Health check: http://localhost:${PORT}/health`);
+  console.log(`🚀 Tesla Charging Queue server running on port ${PORT}`);
+  console.log(`📋 Health check: http://localhost:${PORT}/health`);
+  console.log(`🌐 Frontend served from: http://localhost:${PORT}`);
 
   if (!process.env.SLACK_WEBHOOK_URL) {
     console.warn("⚠️  SLACK_WEBHOOK_URL environment variable not set");
