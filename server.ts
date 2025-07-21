@@ -21,7 +21,7 @@ app.use(cors());
 app.use(express.json());
 
 // Serve static files from the React app build directory (for Railway deployment)
-app.use(express.static(path.join(__dirname, "../dist")));
+app.use(express.static(path.join(__dirname, ".")));
 
 interface HealthResponse {
   status: "ok";
@@ -421,7 +421,7 @@ app.post(
 // This must be after all API routes
 app.get("*", (req: Request, res: Response) => {
   if (!req.path.startsWith("/api/") && !req.path.startsWith("/health")) {
-    res.sendFile(path.join(__dirname, "../dist/index.html"));
+    res.sendFile(path.join(__dirname, "index.html"));
   } else {
     res.status(404).json({ error: "API endpoint not found" });
   }

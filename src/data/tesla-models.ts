@@ -1,4 +1,4 @@
-import vehicleData from "./all-tesla-models-research.json";
+import vehicleData from "./all-tesla-models-research.json" with { type: "json" };
 import {
   TeslaVehicleDatabase,
   TeslaModelName,
