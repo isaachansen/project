@@ -35,7 +35,7 @@ export function Dashboard({
     stopCharging,
     joinQueue,
     leaveQueue,
-  } = useCharging(user?.id);
+  } = useCharging(user?.id, userProfile);
 
   const availableChargers = chargers.filter((c) => !c.is_occupied);
   const hasAvailableCharger = availableChargers.length > 0;
@@ -140,6 +140,7 @@ export function Dashboard({
         user={userProfile}
         onOpenSettings={() => setShowSettingsDialog(true)}
         onSignOut={onSignOut}
+        // onlineUsers removed
       />
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-8">

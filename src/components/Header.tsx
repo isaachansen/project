@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useTheme } from "../hooks/useTheme";
+import { formatModelName } from "../lib/utils";
 import nikolaLogo from "../assets/nikola.png";
 
 interface HeaderProps {
@@ -28,10 +29,11 @@ export function Header({ user, onSignOut, onOpenSettings }: HeaderProps) {
                 <Zap className="w-5 h-5 text-white" />
               </AvatarFallback>
             </Avatar>
-            <div>
+            <div className="flex items-center space-x-2">
               <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">
                 Nikola
               </h1>
+              {/* online status removed */}
             </div>
           </div>
 
@@ -52,7 +54,8 @@ export function Header({ user, onSignOut, onOpenSettings }: HeaderProps) {
                       variant="secondary"
                       className="text-xs px-1 py-0 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
                     >
-                      {user.tesla_year} {user.tesla_model}
+                      {user.tesla_year}{" "}
+                      {formatModelName(user.tesla_model || "")}
                     </Badge>
                   </div>
                 </div>

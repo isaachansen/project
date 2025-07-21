@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { User, TeslaModel } from "../types";
+import { User } from "../types";
 import { Save } from "lucide-react";
 import {
   Dialog,
@@ -17,14 +17,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { formatModelName } from "@/lib/utils";
 import { Slider } from "@/components/ui/slider";
 import {
-  getUniqueModels,
-  getVehiclesByModel,
-  getVehicleByModelAndTrim,
-  calculateChargingTime,
-  formatChargingTime,
-} from "../data/teslaVehicles";
+  modelNames,
+  getYearsForModel,
+  getTrimsForModelYear,
+} from "../data/tesla-models";
+import { TeslaModelName } from "../types/tesla-models";
 
 interface SettingsDialogProps {
   isOpen: boolean;
@@ -39,99 +39,47 @@ export function SettingsDialog({
   user,
   onSave,
 }: SettingsDialogProps) {
-  // Check if user has custom battery from their vehicle_spec
-  const vehicleSpec = user.vehicle_spec as Record<string, unknown> | undefined;
-  const standardVehicle = getVehicleByModelAndTrim(
-    user.tesla_model as TeslaModel,
-    user.tesla_trim || ""
-  );
-  const hasCustomBattery =
-    vehicleSpec &&
-    typeof vehicleSpec.battery_kWh === "number" &&
-    vehicleSpec.battery_kWh !== standardVehicle?.battery_kWh;
-
   const [formData, setFormData] = useState({
     name: user.name,
-    tesla_model: user.tesla_model as TeslaModel,
+    tesla_model: user.tesla_model as TeslaModelName,
+    tesla_year: user.tesla_year?.toString() || "",
     tesla_trim: user.tesla_trim || "",
-    tesla_year: user.tesla_year,
     preferred_charge_percentage: user.preferred_charge_percentage || 80,
-    use_custom_battery: hasCustomBattery || false,
-    custom_battery_kwh:
-      vehicleSpec && typeof vehicleSpec.battery_kWh === "number"
-        ? vehicleSpec.battery_kWh
-        : 75,
   });
 
-  const availableModels = getUniqueModels();
-  const availableTrims = formData.tesla_model
-    ? getVehiclesByModel(formData.tesla_model)
-    : [];
-  const selectedVehicle =
-    formData.tesla_model && formData.tesla_trim
-      ? getVehicleByModelAndTrim(formData.tesla_model, formData.tesla_trim)
-      : null;
-
-  const availableYears = selectedVehicle
-    ? Array.from(
-        { length: selectedVehicle.yearEnd - selectedVehicle.yearStart + 1 },
-        (_, i) => selectedVehicle.yearEnd - i
-      )
+  const availableYears = formData.tesla_model
+    ? getYearsForModel(formData.tesla_model)
     : [];
 
-  // Get the effective battery capacity (custom or from vehicle spec)
-  const effectiveBatteryKwh = formData.use_custom_battery
-    ? formData.custom_battery_kwh || 75
-    : selectedVehicle?.battery_kWh || 75;
-
-  // Calculate custom charging time if using custom battery
-  const customChargeTime = formData.use_custom_battery
-    ? formatChargingTime(calculateChargingTime(effectiveBatteryKwh, 0, 80))
-    : selectedVehicle?.charge_time_0_to_80 || "N/A";
+  const availableTrims =
+    formData.tesla_model && formData.tesla_year
+      ? getTrimsForModelYear(formData.tesla_model, formData.tesla_year)
+      : [];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Create a modified vehicle spec if using custom battery
-    let vehicleSpec = selectedVehicle;
-    if (formData.use_custom_battery && selectedVehicle) {
-      vehicleSpec = {
-        ...selectedVehicle,
-        battery_kWh: formData.custom_battery_kwh,
-        charge_time_0_to_80: customChargeTime,
-      };
-    }
-
     onSave({
-      name: formData.name,
-      tesla_model: formData.tesla_model,
-      tesla_trim: formData.tesla_trim,
-      tesla_year: formData.tesla_year,
-      preferred_charge_percentage: formData.preferred_charge_percentage,
-      vehicle_spec: vehicleSpec as unknown,
+      ...formData,
+      tesla_year: Number(formData.tesla_year),
     });
     onClose();
   };
 
-  const handleModelChange = (model: TeslaModel) => {
+  const handleModelChange = (model: TeslaModelName) => {
     setFormData({
       ...formData,
       tesla_model: model,
+      tesla_year: "",
       tesla_trim: "",
-      tesla_year: new Date().getFullYear(),
     });
   };
 
+  const handleYearChange = (year: string) => {
+    setFormData({ ...formData, tesla_year: year, tesla_trim: "" });
+  };
+
   const handleTrimChange = (trim: string) => {
-    const vehicle = getVehicleByModelAndTrim(formData.tesla_model, trim);
-    setFormData({
-      ...formData,
-      tesla_trim: trim,
-      tesla_year: vehicle ? vehicle.yearEnd : new Date().getFullYear(),
-      // Reset custom battery when changing trim
-      use_custom_battery: false,
-      custom_battery_kwh: vehicle?.battery_kWh || 75,
-    });
+    setFormData({ ...formData, tesla_trim: trim });
   };
 
   return (
@@ -165,7 +113,7 @@ export function SettingsDialog({
               Tesla Model
             </Label>
             <div className="grid grid-cols-2 gap-3 mt-2">
-              {availableModels.map((model) => (
+              {modelNames.map((model) => (
                 <Button
                   key={model}
                   type="button"
@@ -179,7 +127,9 @@ export function SettingsDialog({
                       : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 bg-gray-50 dark:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
                   }`}
                 >
-                  <div className="text-sm font-medium">{model}</div>
+                  <div className="text-sm font-medium">
+                    {formatModelName(model)}
+                  </div>
                 </Button>
               ))}
             </div>
@@ -188,43 +138,12 @@ export function SettingsDialog({
           {formData.tesla_model && (
             <div>
               <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Trim Level
-              </Label>
-              <Select
-                value={formData.tesla_trim}
-                onValueChange={handleTrimChange}
-              >
-                <SelectTrigger className="mt-2 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100">
-                  <SelectValue placeholder="Select trim level" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100">
-                  {availableTrims.map((vehicle) => (
-                    <SelectItem
-                      key={vehicle.trim}
-                      value={vehicle.trim}
-                      className="text-gray-900 dark:text-gray-100 focus:bg-gray-100 dark:focus:bg-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
-                    >
-                      {vehicle.trim}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
-
-          {formData.tesla_trim && availableYears.length > 0 && (
-            <div>
-              <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Year
               </Label>
               <Select
-                value={formData.tesla_year.toString()}
-                onValueChange={(value) =>
-                  setFormData({
-                    ...formData,
-                    tesla_year: parseInt(value),
-                  })
-                }
+                value={formData.tesla_year}
+                onValueChange={handleYearChange}
+                disabled={availableYears.length === 0}
               >
                 <SelectTrigger className="mt-2 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100">
                   <SelectValue placeholder="Select year" />
@@ -233,10 +152,38 @@ export function SettingsDialog({
                   {availableYears.map((year) => (
                     <SelectItem
                       key={year}
-                      value={year.toString()}
+                      value={year}
                       className="text-gray-900 dark:text-gray-100 focus:bg-gray-100 dark:focus:bg-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
                     >
                       {year}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          {formData.tesla_year && (
+            <div>
+              <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Trim Level
+              </Label>
+              <Select
+                value={formData.tesla_trim}
+                onValueChange={handleTrimChange}
+                disabled={availableTrims.length === 0}
+              >
+                <SelectTrigger className="mt-2 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100">
+                  <SelectValue placeholder="Select trim level" />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100">
+                  {availableTrims.map((trim) => (
+                    <SelectItem
+                      key={trim.name}
+                      value={trim.name}
+                      className="text-gray-900 dark:text-gray-100 focus:bg-gray-100 dark:focus:bg-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
+                    >
+                      {trim.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -262,111 +209,34 @@ export function SettingsDialog({
                 step={5}
                 className="w-full"
               />
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-700 dark:text-gray-300">50%</span>
+              <div className="flex justify-between text-sm text-gray-400">
+                <span>50%</span>
                 <span className="font-semibold text-primary">
                   {formData.preferred_charge_percentage}%
                 </span>
-                <span className="text-gray-700 dark:text-gray-300">100%</span>
+                <span>100%</span>
               </div>
             </div>
           </div>
 
-          {selectedVehicle && (
-            <div className="bg-gray-100 dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-600">
-              <div className="flex items-center space-x-3 mb-3">
-                <img
-                  src={selectedVehicle.imageUrl}
-                  alt={`${selectedVehicle.model} ${selectedVehicle.trim}`}
-                  className="w-16 h-10 object-cover rounded-lg border border-gray-200 dark:border-gray-600"
-                />
-                <div>
-                  <div className="font-medium text-gray-900 dark:text-gray-100">
-                    {formData.tesla_year} {selectedVehicle.model}{" "}
-                    {selectedVehicle.trim}
-                  </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">
-                    {effectiveBatteryKwh} kWh Battery
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">
-                    Charge Time (0-80%):
-                  </span>
-                  <span className="text-gray-700 dark:text-gray-300">
-                    {customChargeTime}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">
-                    Battery Capacity:
-                  </span>
-                  <span className="text-gray-700 dark:text-gray-300">
-                    {effectiveBatteryKwh} kWh
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div className="flex items-center space-x-3">
-            <input
-              type="checkbox"
-              id="use_custom_battery"
-              checked={formData.use_custom_battery}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  use_custom_battery: e.target.checked,
-                })
-              }
-              className="rounded border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-primary focus:ring-primary"
-            />
-            <Label
-              htmlFor="use_custom_battery"
-              className="text-sm text-gray-700 dark:text-gray-300"
-            >
-              Use custom battery capacity
-            </Label>
-          </div>
-
-          {formData.use_custom_battery && (
-            <div>
-              <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Custom Battery Capacity (kWh)
-              </Label>
-              <Input
-                type="number"
-                value={formData.custom_battery_kwh}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    custom_battery_kwh: parseFloat(e.target.value) || 75,
-                  })
-                }
-                min="40"
-                max="200"
-                step="0.1"
-                className="mt-2 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
-              />
-            </div>
-          )}
-
-          <div className="flex justify-end space-x-3 pt-4">
+          <div className="flex justify-end space-x-3">
             <Button
               type="button"
               variant="outline"
               onClick={onClose}
-              className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 bg-gray-50 dark:bg-gray-800"
+              className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 border-gray-300 dark:border-gray-500"
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="bg-primary hover:bg-primary/90 text-white"
+              className="bg-primary hover:bg-primary/90 text-white font-bold"
+              disabled={
+                !formData.name ||
+                !formData.tesla_model ||
+                !formData.tesla_year ||
+                !formData.tesla_trim
+              }
             >
               <Save className="w-4 h-4 mr-2" />
               Save Changes

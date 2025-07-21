@@ -1,0 +1,682 @@
+{
+  "charging_infrastructure": {
+    "charger_specs": {
+      "amperage": 32,
+      "voltage": 210,
+      "power_rating": "7kWh",
+      "actual_power": "6.72kW",
+      "effective_power": "6.18kW",
+      "efficiency_factor": 0.92
+    }
+  },
+  "tesla_data": {
+    "model_s": {
+      "2012": {
+        "trims": [
+          {
+            "name": "Signature",
+            "battery_capacity_kwh": 85,
+            "charging_time_hours": 13.8
+          }
+        ]
+      },
+      "2013": {
+        "trims": [
+          {
+            "name": "60 kWh",
+            "battery_capacity_kwh": 60,
+            "charging_time_hours": 9.7
+          },
+          {
+            "name": "85 kWh",
+            "battery_capacity_kwh": 85,
+            "charging_time_hours": 13.8
+          }
+        ]
+      },
+      "2014": {
+        "trims": [
+          {
+            "name": "60 kWh",
+            "battery_capacity_kwh": 60,
+            "charging_time_hours": 9.7
+          },
+          {
+            "name": "85 kWh",
+            "battery_capacity_kwh": 85,
+            "charging_time_hours": 13.8
+          }
+        ]
+      },
+      "2015": {
+        "trims": [
+          {
+            "name": "60 kWh",
+            "battery_capacity_kwh": 60,
+            "charging_time_hours": 9.7
+          },
+          {
+            "name": "85 kWh",
+            "battery_capacity_kwh": 85,
+            "charging_time_hours": 13.8
+          },
+          {
+            "name": "90 kWh",
+            "battery_capacity_kwh": 90,
+            "charging_time_hours": 14.6
+          }
+        ]
+      },
+      "2016": {
+        "trims": [
+          {
+            "name": "60 kWh",
+            "battery_capacity_kwh": 60,
+            "charging_time_hours": 9.7
+          },
+          {
+            "name": "75 kWh",
+            "battery_capacity_kwh": 75,
+            "charging_time_hours": 12.1
+          },
+          {
+            "name": "85 kWh",
+            "battery_capacity_kwh": 85,
+            "charging_time_hours": 13.8
+          },
+          {
+            "name": "90 kWh",
+            "battery_capacity_kwh": 90,
+            "charging_time_hours": 14.6
+          },
+          {
+            "name": "100 kWh",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          }
+        ]
+      },
+      "2017": {
+        "trims": [
+          {
+            "name": "60 kWh",
+            "battery_capacity_kwh": 60,
+            "charging_time_hours": 9.7
+          },
+          {
+            "name": "75 kWh",
+            "battery_capacity_kwh": 75,
+            "charging_time_hours": 12.1
+          },
+          {
+            "name": "90 kWh",
+            "battery_capacity_kwh": 90,
+            "charging_time_hours": 14.6
+          },
+          {
+            "name": "100 kWh",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          }
+        ]
+      },
+      "2018": {
+        "trims": [
+          {
+            "name": "75 kWh",
+            "battery_capacity_kwh": 75,
+            "charging_time_hours": 12.1
+          },
+          {
+            "name": "100 kWh",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          }
+        ]
+      },
+      "2019": {
+        "trims": [
+          {
+            "name": "75 kWh",
+            "battery_capacity_kwh": 75,
+            "charging_time_hours": 12.1
+          },
+          {
+            "name": "100 kWh",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          }
+        ]
+      },
+      "2020": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          }
+        ]
+      },
+      "2021": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          },
+          {
+            "name": "Plaid",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          }
+        ]
+      },
+      "2022": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          },
+          {
+            "name": "Plaid",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          }
+        ]
+      },
+      "2023": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          },
+          {
+            "name": "Plaid",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          }
+        ]
+      },
+      "2024": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          },
+          {
+            "name": "Plaid",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          }
+        ]
+      },
+      "2025": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          },
+          {
+            "name": "Plaid",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          }
+        ]
+      }
+    },
+    "model_3": {
+      "2017": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 80.5,
+            "charging_time_hours": 13.0
+          }
+        ]
+      },
+      "2018": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 80.5,
+            "charging_time_hours": 13.0
+          },
+          {
+            "name": "Standard Range Plus",
+            "battery_capacity_kwh": 55,
+            "charging_time_hours": 8.9
+          }
+        ]
+      },
+      "2019": {
+        "trims": [
+          {
+            "name": "Standard Range Plus",
+            "battery_capacity_kwh": 55,
+            "charging_time_hours": 8.9
+          },
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 75,
+            "charging_time_hours": 12.1
+          },
+          {
+            "name": "Performance",
+            "battery_capacity_kwh": 75,
+            "charging_time_hours": 12.1
+          }
+        ]
+      },
+      "2020": {
+        "trims": [
+          {
+            "name": "Standard Range Plus",
+            "battery_capacity_kwh": 55,
+            "charging_time_hours": 8.9
+          },
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 75,
+            "charging_time_hours": 12.1
+          },
+          {
+            "name": "Performance",
+            "battery_capacity_kwh": 75,
+            "charging_time_hours": 12.1
+          }
+        ]
+      },
+      "2021": {
+        "trims": [
+          {
+            "name": "Standard Range Plus",
+            "battery_capacity_kwh": 55,
+            "charging_time_hours": 8.9
+          },
+          {
+            "name": "Standard Range (LFP)",
+            "battery_capacity_kwh": 60,
+            "charging_time_hours": 9.7
+          },
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 75,
+            "charging_time_hours": 12.1
+          },
+          {
+            "name": "Performance",
+            "battery_capacity_kwh": 75,
+            "charging_time_hours": 12.1
+          }
+        ]
+      },
+      "2022": {
+        "trims": [
+          {
+            "name": "Standard Range (LFP)",
+            "battery_capacity_kwh": 60,
+            "charging_time_hours": 9.7
+          },
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 82,
+            "charging_time_hours": 13.3
+          },
+          {
+            "name": "Performance",
+            "battery_capacity_kwh": 82,
+            "charging_time_hours": 13.3
+          }
+        ]
+      },
+      "2023": {
+        "trims": [
+          {
+            "name": "Standard Range (LFP)",
+            "battery_capacity_kwh": 60,
+            "charging_time_hours": 9.7
+          },
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 82,
+            "charging_time_hours": 13.3
+          },
+          {
+            "name": "Performance",
+            "battery_capacity_kwh": 82,
+            "charging_time_hours": 13.3
+          }
+        ]
+      },
+      "2024": {
+        "trims": [
+          {
+            "name": "Standard Range (LFP)",
+            "battery_capacity_kwh": 60,
+            "charging_time_hours": 9.7
+          },
+          {
+            "name": "Highland RWD",
+            "battery_capacity_kwh": 60.9,
+            "charging_time_hours": 9.9
+          },
+          {
+            "name": "Highland Long Range",
+            "battery_capacity_kwh": 79.7,
+            "charging_time_hours": 12.9
+          },
+          {
+            "name": "Performance",
+            "battery_capacity_kwh": 79.7,
+            "charging_time_hours": 12.9
+          }
+        ]
+      },
+      "2025": {
+        "trims": [
+          {
+            "name": "Highland RWD",
+            "battery_capacity_kwh": 60.9,
+            "charging_time_hours": 9.9
+          },
+          {
+            "name": "Highland Long Range",
+            "battery_capacity_kwh": 79.7,
+            "charging_time_hours": 12.9
+          },
+          {
+            "name": "Performance",
+            "battery_capacity_kwh": 79.7,
+            "charging_time_hours": 12.9
+          }
+        ]
+      }
+    },
+    "model_x": {
+      "2015": {
+        "trims": [
+          {
+            "name": "60D",
+            "battery_capacity_kwh": 60,
+            "charging_time_hours": 9.7
+          }
+        ]
+      },
+      "2016": {
+        "trims": [
+          {
+            "name": "60D",
+            "battery_capacity_kwh": 60,
+            "charging_time_hours": 9.7
+          },
+          {
+            "name": "75D",
+            "battery_capacity_kwh": 75,
+            "charging_time_hours": 12.1
+          },
+          {
+            "name": "90D",
+            "battery_capacity_kwh": 90,
+            "charging_time_hours": 14.6
+          }
+        ]
+      },
+      "2017": {
+        "trims": [
+          {
+            "name": "75D",
+            "battery_capacity_kwh": 75,
+            "charging_time_hours": 12.1
+          },
+          {
+            "name": "90D",
+            "battery_capacity_kwh": 90,
+            "charging_time_hours": 14.6
+          },
+          {
+            "name": "100D",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          }
+        ]
+      },
+      "2018": {
+        "trims": [
+          {
+            "name": "75D",
+            "battery_capacity_kwh": 75,
+            "charging_time_hours": 12.1
+          },
+          {
+            "name": "100D",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          }
+        ]
+      },
+      "2019": {
+        "trims": [
+          {
+            "name": "75D",
+            "battery_capacity_kwh": 75,
+            "charging_time_hours": 12.1
+          },
+          {
+            "name": "100D",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          },
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          }
+        ]
+      },
+      "2020": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          }
+        ]
+      },
+      "2021": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          }
+        ]
+      },
+      "2022": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          },
+          {
+            "name": "Plaid",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          }
+        ]
+      },
+      "2023": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          },
+          {
+            "name": "Plaid",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          }
+        ]
+      },
+      "2024": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          },
+          {
+            "name": "Plaid",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          }
+        ]
+      },
+      "2025": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          },
+          {
+            "name": "Plaid",
+            "battery_capacity_kwh": 100,
+            "charging_time_hours": 16.2
+          }
+        ]
+      }
+    },
+    "model_y": {
+      "2020": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 75,
+            "charging_time_hours": 12.1
+          },
+          {
+            "name": "Performance",
+            "battery_capacity_kwh": 75,
+            "charging_time_hours": 12.1
+          }
+        ]
+      },
+      "2021": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 75,
+            "charging_time_hours": 12.1
+          },
+          {
+            "name": "Performance",
+            "battery_capacity_kwh": 75,
+            "charging_time_hours": 12.1
+          },
+          {
+            "name": "Standard Range",
+            "battery_capacity_kwh": 60,
+            "charging_time_hours": 9.7
+          }
+        ]
+      },
+      "2022": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 81,
+            "charging_time_hours": 13.1
+          },
+          {
+            "name": "Performance",
+            "battery_capacity_kwh": 81,
+            "charging_time_hours": 13.1
+          },
+          {
+            "name": "Standard Range",
+            "battery_capacity_kwh": 60,
+            "charging_time_hours": 9.7
+          },
+          {
+            "name": "AWD (4680)",
+            "battery_capacity_kwh": 67.6,
+            "charging_time_hours": 10.9
+          }
+        ]
+      },
+      "2023": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 81,
+            "charging_time_hours": 13.1
+          },
+          {
+            "name": "Performance",
+            "battery_capacity_kwh": 81,
+            "charging_time_hours": 13.1
+          },
+          {
+            "name": "Standard Range",
+            "battery_capacity_kwh": 60,
+            "charging_time_hours": 9.7
+          },
+          {
+            "name": "AWD (4680)",
+            "battery_capacity_kwh": 67.6,
+            "charging_time_hours": 10.9
+          }
+        ]
+      },
+      "2024": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 81,
+            "charging_time_hours": 13.1
+          },
+          {
+            "name": "Performance",
+            "battery_capacity_kwh": 81,
+            "charging_time_hours": 13.1
+          },
+          {
+            "name": "Standard Range",
+            "battery_capacity_kwh": 60,
+            "charging_time_hours": 9.7
+          },
+          {
+            "name": "AWD (4680)",
+            "battery_capacity_kwh": 67.6,
+            "charging_time_hours": 10.9
+          }
+        ]
+      },
+      "2025": {
+        "trims": [
+          {
+            "name": "Juniper Standard",
+            "battery_capacity_kwh": 62.5,
+            "charging_time_hours": 10.1
+          },
+          {
+            "name": "Juniper Long Range",
+            "battery_capacity_kwh": 75,
+            "charging_time_hours": 12.1
+          },
+          {
+            "name": "Juniper Performance",
+            "battery_capacity_kwh": 75,
+            "charging_time_hours": 12.1
+          }
+        ]
+      }
+    }
+  }
+}

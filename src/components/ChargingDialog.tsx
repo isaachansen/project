@@ -9,15 +9,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
-import { User, TeslaModel } from "../types";
+import { User } from "../types";
+import { TeslaModelName, Trim } from "../types/tesla-models";
+import { getTrimData } from "../data/tesla-models";
 import {
-  getVehicleByModelAndTrim,
   calculateChargingTime,
   calculateEstimatedEndTime,
   formatChargingTime,
-  getChargingInsights,
-  TeslaVehicle,
-} from "../data/teslaVehicles";
+} from "../lib/charging-calculator";
+import { getVehicleImage } from "@/data/image-map";
+import { formatModelName } from "@/lib/utils";
 
 interface ChargingDialogProps {
   isOpen: boolean;
@@ -57,14 +58,19 @@ export function ChargingDialog({
   const [targetCharge, setTargetCharge] = useState(defaultTarget);
 
   // Get vehicle specifications
-  const vehicleSpec: TeslaVehicle | null =
-    (user?.vehicle_spec as unknown as TeslaVehicle) ||
-    (user?.tesla_model && user?.tesla_trim
-      ? getVehicleByModelAndTrim(
-          user.tesla_model as TeslaModel,
+  const vehicleSpec: Trim | null =
+    user?.tesla_model && user?.tesla_year && user?.tesla_trim
+      ? getTrimData(
+          user.tesla_model as TeslaModelName,
+          user.tesla_year.toString(),
           user.tesla_trim
         )
-      : null);
+      : null;
+
+  const vehicleImage =
+    user?.tesla_model && user.tesla_year
+      ? getVehicleImage(user.tesla_model as TeslaModelName, user.tesla_year)
+      : "";
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,7 +83,7 @@ export function ChargingDialog({
 
   const chargingTimeMinutes = vehicleSpec
     ? calculateChargingTime(
-        vehicleSpec.battery_kWh,
+        vehicleSpec,
         currentCharge,
         targetCharge,
         temperatureF
@@ -86,7 +92,7 @@ export function ChargingDialog({
 
   const estimatedEndTime = vehicleSpec
     ? calculateEstimatedEndTime(
-        vehicleSpec.battery_kWh,
+        vehicleSpec,
         currentCharge,
         targetCharge,
         temperatureF
@@ -94,12 +100,8 @@ export function ChargingDialog({
     : new Date(Date.now() + chargingTimeMinutes * 60000);
 
   const energyNeeded = vehicleSpec
-    ? (vehicleSpec.battery_kWh * (targetCharge - currentCharge)) / 100
+    ? (vehicleSpec.battery_capacity_kwh * (targetCharge - currentCharge)) / 100
     : 0;
-
-  const chargingInsights = vehicleSpec
-    ? getChargingInsights(currentCharge, targetCharge, temperatureF)
-    : null;
 
   const isLongSession = chargingTimeMinutes > 480; // More than 8 hours
 
@@ -118,17 +120,21 @@ export function ChargingDialog({
           {vehicleSpec && (
             <div className="bg-gray-100 dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-600">
               <div className="flex items-center space-x-3 mb-3">
-                <img
-                  src={vehicleSpec.imageUrl}
-                  alt={`${vehicleSpec.model} ${vehicleSpec.trim}`}
-                  className="w-16 h-10 object-cover rounded-lg border border-gray-200 dark:border-gray-600"
-                />
+                {vehicleImage && (
+                  <img
+                    src={vehicleImage}
+                    alt={formatModelName(user?.tesla_model || "")}
+                    className="w-16 h-10 object-cover rounded-lg border border-gray-200 dark:border-gray-600"
+                  />
+                )}
                 <div>
                   <div className="font-medium text-gray-900 dark:text-gray-100">
-                    {user?.tesla_year} {vehicleSpec.model} {vehicleSpec.trim}
+                    {user?.tesla_year}{" "}
+                    {formatModelName(user?.tesla_model || "")}{" "}
+                    {user?.tesla_trim}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
-                    {vehicleSpec.battery_kWh} kWh Battery
+                    {vehicleSpec.battery_capacity_kwh} kWh Battery
                   </div>
                 </div>
               </div>
@@ -248,47 +254,7 @@ export function ChargingDialog({
           </div>
 
           {/* Charging Insights */}
-          {chargingInsights && (
-            <div className="bg-gray-100 dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-600">
-              <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-3">
-                Charging Insights
-              </h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">
-                    Avg. Rate:
-                  </span>
-                  <span className="text-gray-700 dark:text-gray-300">
-                    {chargingInsights.averageRate.toFixed(1)}%/hr
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">
-                    Power:
-                  </span>
-                  <span className="text-gray-700 dark:text-gray-300">
-                    {chargingInsights.estimatedPower.toFixed(1)} kW
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">
-                    Efficiency:
-                  </span>
-                  <span className="text-gray-700 dark:text-gray-300">
-                    {chargingInsights.efficiency}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">
-                    Temperature:
-                  </span>
-                  <span className="text-gray-700 dark:text-gray-300">
-                    {chargingInsights.temperatureImpact}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
+          {/* Removed Charging Insights section as per new_code */}
 
           {/* Long session warning */}
           {isLongSession && (

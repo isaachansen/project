@@ -1,79 +1,75 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { ChargingService } from "../lib/charging";
-import { Charger, QueueEntry, ChargingSession } from "../types";
-import { supabase } from "../lib/supabase";
+import { Charger, QueueEntry, ChargingSession, User } from "../types";
+import { toast as sonner } from "sonner";
 
-export function useCharging(userId?: string) {
+export function useCharging(userId?: string, userProfile?: User) {
   const [chargers, setChargers] = useState<Charger[]>([]);
   const [queue, setQueue] = useState<QueueEntry[]>([]);
   const [userSession, setUserSession] = useState<ChargingSession | null>(null);
   const [userQueueEntry, setUserQueueEntry] = useState<QueueEntry | null>(null);
   const [loading, setLoading] = useState(true);
+  const [onlineUsers] = useState(0);
+  const pollingIntervalRef = useRef<number | null>(null);
 
-  const loadData = useCallback(async () => {
-    setLoading(true); // Avoids UI flicker on reloads
-    try {
-      const [chargersData, queueData] = await Promise.all([
-        ChargingService.getChargers(),
-        ChargingService.getQueue(),
-      ]);
-
-      setChargers(chargersData);
-      setQueue(queueData);
-
-      if (userId) {
-        const [sessionData, queueEntryData] = await Promise.all([
-          ChargingService.getUserChargingSession(userId),
-          ChargingService.getUserQueueEntry(userId),
+  const loadData = useCallback(
+    async (isInitialLoad = false) => {
+      if (isInitialLoad) {
+        setLoading(true);
+      }
+      try {
+        const [chargersData, queueData] = await Promise.all([
+          ChargingService.getChargers(),
+          ChargingService.getQueue(),
         ]);
-        setUserSession(sessionData);
-        setUserQueueEntry(queueEntryData);
+
+        setChargers(chargersData);
+        setQueue(queueData);
+
+        if (userId) {
+          const [sessionData, queueEntryData] = await Promise.all([
+            ChargingService.getUserChargingSession(userId),
+            ChargingService.getUserQueueEntry(userId),
+          ]);
+          setUserSession(sessionData);
+          setUserQueueEntry(queueEntryData);
+        }
+      } catch (error) {
+        if (error instanceof Error && !error.message.includes("406")) {
+          console.error("Error loading charging data:", error);
+          sonner.error("Failed to load charging data.");
+        }
+      } finally {
+        if (isInitialLoad) {
+          setLoading(false);
+        }
       }
-    } catch (error) {
-      if (error instanceof Error && !error.message.includes("406")) {
-        console.error("Error loading charging data:", error);
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, [userId]);
+    },
+    [userId]
+  );
 
   useEffect(() => {
-    if (!userId) {
+    if (!userId || !userProfile) {
       setLoading(false);
       return;
     }
 
-    loadData();
-
-    const channel = supabase.channel(`charging-user-${userId}`);
-
-    const handleDataChange = () => {
-      loadData();
-    };
-
-    channel
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "charging_sessions" },
-        handleDataChange
-      )
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "queue_entries" },
-        handleDataChange
-      )
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "users" },
-        handleDataChange
-      )
-      .subscribe();
+    loadData(true);
+    // start polling every 5 seconds to update data
+    if (pollingIntervalRef.current == null) {
+      pollingIntervalRef.current = window.setInterval(() => {
+        loadData();
+      }, 5000);
+    }
 
     return () => {
-      supabase.removeChannel(channel);
+      // Clear polling interval if set
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+        pollingIntervalRef.current = null;
+      }
     };
-  }, [userId, loadData]);
+  }, [userId, userProfile, loadData]);
 
   const startCharging = async (
     chargerId: number,
@@ -142,5 +138,7 @@ export function useCharging(userId?: string) {
     stopCharging,
     joinQueue,
     leaveQueue,
+    onlineUsers,
+    // channelRef removed for polling-only
   };
 }

@@ -2,14 +2,14 @@ import { Charger } from "../types";
 import { Zap, Clock, Battery, Car } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { getTrimData } from "../data/tesla-models";
 import {
-  getVehicleByModelAndTrim,
   calculateCurrentBatteryLevel,
   formatChargingTime,
-  getChargingInsights,
-  TeslaVehicle,
-} from "../data/teslaVehicles";
-import { TeslaModel } from "../types";
+} from "../lib/charging-calculator";
+import { TeslaModelName, Trim } from "../types/tesla-models";
+import { getVehicleImage } from "@/data/image-map";
+import { formatModelName } from "@/lib/utils";
 
 interface ChargingStationProps {
   charger: Charger;
@@ -89,14 +89,19 @@ export function ChargingStation({
   const isCurrentUser = currentUserId === user?.id;
 
   // Get vehicle specifications
-  const vehicleSpec: TeslaVehicle | null =
-    (user?.vehicle_spec as unknown as TeslaVehicle) ||
-    (user?.tesla_model && user?.tesla_trim
-      ? getVehicleByModelAndTrim(
-          user.tesla_model as TeslaModel,
+  const vehicleSpec: Trim | null =
+    user?.tesla_model && user?.tesla_year && user?.tesla_trim
+      ? getTrimData(
+          user.tesla_model as TeslaModelName,
+          user.tesla_year.toString(),
           user.tesla_trim
         )
-      : null);
+      : null;
+
+  const vehicleImage =
+    user?.tesla_model && user.tesla_year
+      ? getVehicleImage(user.tesla_model as TeslaModelName, user.tesla_year)
+      : "";
 
   const getChargingProgress = () => {
     if (!session.start_time || !session.estimated_end_time) return 0;
@@ -129,6 +134,7 @@ export function ChargingStation({
     // Use enhanced charging calculation based on real Tesla data
     if (vehicleSpec) {
       return calculateCurrentBatteryLevel(
+        vehicleSpec,
         session.current_charge || 0,
         session.target_charge || 80,
         new Date(session.start_time),
@@ -153,15 +159,6 @@ export function ChargingStation({
   const progress = getChargingProgress();
   const remainingTime = getRemainingTime();
   const currentBattery = getCurrentBatteryLevel();
-
-  // Get charging insights for enhanced accuracy display
-  const chargingInsights = vehicleSpec
-    ? getChargingInsights(
-        session.current_charge || 0,
-        session.target_charge || 80,
-        75 // Assume typical outdoor temperature
-      )
-    : null;
 
   // Dynamic card styling based on whether this is the current user
   const cardClassName = isCurrentUser
@@ -195,10 +192,10 @@ export function ChargingStation({
 
       <CardContent className="space-y-4">
         <div className="flex items-center space-x-4">
-          {vehicleSpec ? (
+          {vehicleImage ? (
             <img
-              src={vehicleSpec.imageUrl}
-              alt={`${vehicleSpec.model} ${vehicleSpec.trim}`}
+              src={vehicleImage}
+              alt={formatModelName(user?.tesla_model || "")}
               className="w-20 h-12 object-cover rounded-lg border border-gray-600"
             />
           ) : (
@@ -212,10 +209,10 @@ export function ChargingStation({
                 {user?.name || "Unknown User"}
               </h3>
               <span className="text-sm text-gray-600 dark:text-gray-400">
-                {user?.tesla_year} {user?.tesla_model}
+                {user?.tesla_year} {formatModelName(user?.tesla_model || "")}
               </span>
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">
+            <div className="text-sm flex justify-between text-gray-600 dark:text-gray-400">
               {user?.tesla_trim && (
                 <Badge
                   variant="outline"
@@ -225,7 +222,9 @@ export function ChargingStation({
                 </Badge>
               )}
               {vehicleSpec && (
-                <span className="text-xs">{vehicleSpec.battery_kWh}kWh</span>
+                <span className="text-xs">
+                  {vehicleSpec.battery_capacity_kwh}kWh
+                </span>
               )}
             </div>
           </div>
@@ -271,37 +270,8 @@ export function ChargingStation({
             <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
               {Math.round(progress)}% Complete
             </div>
-            {chargingInsights && (
-              <div className="text-xs text-gray-600 dark:text-gray-400">
-                {chargingInsights.averageRate.toFixed(1)}%/hr
-              </div>
-            )}
           </div>
         </div>
-
-        {chargingInsights && (
-          <div className="mt-3 p-3 bg-gray-100 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
-            <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">
-              Charging Insights
-            </div>
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <div>
-                <span className="text-gray-600 dark:text-gray-400">Power:</span>
-                <span className="ml-1 text-gray-700 dark:text-gray-300">
-                  {chargingInsights.estimatedPower.toFixed(1)}kW
-                </span>
-              </div>
-              <div>
-                <span className="text-gray-600 dark:text-gray-400">
-                  Efficiency:
-                </span>
-                <span className="ml-1 text-gray-700 dark:text-gray-300">
-                  {chargingInsights.efficiency}
-                </span>
-              </div>
-            </div>
-          </div>
-        )}
       </CardContent>
     </Card>
   );

@@ -1,16 +1,8 @@
 import { supabase } from "./supabase";
-import {
-  ChargingSession,
-  QueueEntry,
-  Charger,
-  User,
-  TeslaModel,
-} from "../types";
-import {
-  getVehicleByModelAndTrim,
-  calculateEstimatedEndTime,
-  TeslaVehicle,
-} from "../data/teslaVehicles";
+import { ChargingSession, QueueEntry, Charger, User } from "../types";
+import { TeslaModelName, Trim } from "../types/tesla-models";
+import { getTrimData } from "../data/tesla-models";
+import { calculateEstimatedEndTime } from "../lib/charging-calculator";
 import { getSlackService } from "./slack";
 
 export class ChargingService {
@@ -91,19 +83,21 @@ export class ChargingService {
 
       if (userProfile) {
         // Try to get vehicle spec from saved data or lookup by model/trim
-        const vehicleSpec: TeslaVehicle | null =
-          (userProfile.vehicle_spec as unknown as TeslaVehicle) ||
-          (userProfile.tesla_model && userProfile.tesla_trim
-            ? getVehicleByModelAndTrim(
-                userProfile.tesla_model as TeslaModel,
+        const vehicleSpec: Trim | null =
+          userProfile.tesla_model &&
+          userProfile.tesla_year &&
+          userProfile.tesla_trim
+            ? getTrimData(
+                userProfile.tesla_model as TeslaModelName,
+                userProfile.tesla_year.toString(),
                 userProfile.tesla_trim
               )
-            : null);
+            : null;
 
         if (vehicleSpec) {
           // Use enhanced Tesla vehicle data for charging time calculation with temperature
           estimatedEndTime = calculateEstimatedEndTime(
-            vehicleSpec.battery_kWh,
+            vehicleSpec,
             currentCharge,
             targetCharge,
             75 // Assume typical outdoor temperature - could be enhanced with real weather data

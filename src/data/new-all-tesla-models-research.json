@@ -1,0 +1,1245 @@
+{
+  "charging_calculation_notes": {
+    "methodology": "Time = Battery Capacity (kWh) / 6.18kW effective charging power",
+    "efficiency_factor": "92% charging efficiency applied",
+    "charger_limitation": "32amp/210v charger provides 6.72kW, limiting factor for all Tesla models",
+    "temperature_effects": "Cold weather can increase charging time by 10-15%",
+    "battery_chemistry_notes": {
+      "LFP": "Can charge to 100% daily, more cold-sensitive",
+      "NMC_NCA": "Recommended 80% daily limit, better cold performance"
+    }
+  },
+  "charging_infrastructure": {
+    "charger_specs": {
+      "amperage": 32,
+      "voltage": 210,
+      "power_rating": "7kWh",
+      "actual_power": "6.72kW",
+      "effective_power": "6.18kW",
+      "efficiency_factor": 0.92
+    }
+  },
+  "tesla_data": {
+    "model_s": {
+      "2012": {
+        "trims": [
+          {
+            "name": "Signature",
+            "battery_capacity_kwh": 85,
+            "usable_capacity_kwh": 81,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 20,
+            "max_dc_charging_kw": 90,
+            "charging_time_0_100_hours": 13.1
+          },
+          {
+            "name": "Signature Performance",
+            "battery_capacity_kwh": 85,
+            "usable_capacity_kwh": 81,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 20,
+            "max_dc_charging_kw": 90,
+            "charging_time_0_100_hours": 13.1
+          }
+        ]
+      },
+      "2013": {
+        "trims": [
+          {
+            "name": "60",
+            "battery_capacity_kwh": 60,
+            "usable_capacity_kwh": 57,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 20,
+            "max_dc_charging_kw": 90,
+            "charging_time_0_100_hours": 9.2
+          },
+          {
+            "name": "85",
+            "battery_capacity_kwh": 85,
+            "usable_capacity_kwh": 81,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 20,
+            "max_dc_charging_kw": 90,
+            "charging_time_0_100_hours": 13.1
+          },
+          {
+            "name": "P85",
+            "battery_capacity_kwh": 85,
+            "usable_capacity_kwh": 81,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 20,
+            "max_dc_charging_kw": 90,
+            "charging_time_0_100_hours": 13.1
+          }
+        ]
+      },
+      "2014": {
+        "trims": [
+          {
+            "name": "60",
+            "battery_capacity_kwh": 60,
+            "usable_capacity_kwh": 57,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 20,
+            "max_dc_charging_kw": 120,
+            "charging_time_0_100_hours": 9.2
+          },
+          {
+            "name": "85",
+            "battery_capacity_kwh": 85,
+            "usable_capacity_kwh": 81,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 20,
+            "max_dc_charging_kw": 120,
+            "charging_time_0_100_hours": 13.1
+          },
+          {
+            "name": "P85D",
+            "battery_capacity_kwh": 85,
+            "usable_capacity_kwh": 81,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 20,
+            "max_dc_charging_kw": 120,
+            "charging_time_0_100_hours": 13.1
+          }
+        ]
+      },
+      "2015": {
+        "trims": [
+          {
+            "name": "70",
+            "battery_capacity_kwh": 70,
+            "usable_capacity_kwh": 67,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 20,
+            "max_dc_charging_kw": 120,
+            "charging_time_0_100_hours": 10.8
+          },
+          {
+            "name": "70D",
+            "battery_capacity_kwh": 70,
+            "usable_capacity_kwh": 67,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 20,
+            "max_dc_charging_kw": 120,
+            "charging_time_0_100_hours": 10.8
+          },
+          {
+            "name": "90D",
+            "battery_capacity_kwh": 90,
+            "usable_capacity_kwh": 86,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 20,
+            "max_dc_charging_kw": 120,
+            "charging_time_0_100_hours": 13.9
+          },
+          {
+            "name": "P90D",
+            "battery_capacity_kwh": 90,
+            "usable_capacity_kwh": 86,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 20,
+            "max_dc_charging_kw": 120,
+            "charging_time_0_100_hours": 13.9
+          }
+        ]
+      },
+      "2016": {
+        "trims": [
+          {
+            "name": "60",
+            "battery_capacity_kwh": 75,
+            "usable_capacity_kwh": 57,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 22,
+            "max_dc_charging_kw": 145,
+            "charging_time_0_100_hours": 9.2
+          },
+          {
+            "name": "60D",
+            "battery_capacity_kwh": 75,
+            "usable_capacity_kwh": 57,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 22,
+            "max_dc_charging_kw": 145,
+            "charging_time_0_100_hours": 9.2
+          },
+          {
+            "name": "75D",
+            "battery_capacity_kwh": 75,
+            "usable_capacity_kwh": 72,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 22,
+            "max_dc_charging_kw": 145,
+            "charging_time_0_100_hours": 11.7
+          },
+          {
+            "name": "90D",
+            "battery_capacity_kwh": 90,
+            "usable_capacity_kwh": 86,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 22,
+            "max_dc_charging_kw": 145,
+            "charging_time_0_100_hours": 13.9
+          },
+          {
+            "name": "P100D",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 96,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 22,
+            "max_dc_charging_kw": 145,
+            "charging_time_0_100_hours": 15.5
+          }
+        ]
+      },
+      "2017": {
+        "trims": [
+          {
+            "name": "75",
+            "battery_capacity_kwh": 75,
+            "usable_capacity_kwh": 72,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 22,
+            "max_dc_charging_kw": 145,
+            "charging_time_0_100_hours": 11.7
+          },
+          {
+            "name": "75D",
+            "battery_capacity_kwh": 75,
+            "usable_capacity_kwh": 72,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 22,
+            "max_dc_charging_kw": 145,
+            "charging_time_0_100_hours": 11.7
+          },
+          {
+            "name": "100D",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 96,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 22,
+            "max_dc_charging_kw": 145,
+            "charging_time_0_100_hours": 15.5
+          },
+          {
+            "name": "P100D",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 96,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 22,
+            "max_dc_charging_kw": 145,
+            "charging_time_0_100_hours": 15.5
+          }
+        ]
+      },
+      "2018": {
+        "trims": [
+          {
+            "name": "75D",
+            "battery_capacity_kwh": 75,
+            "usable_capacity_kwh": 72,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 22,
+            "max_dc_charging_kw": 145,
+            "charging_time_0_100_hours": 11.7
+          },
+          {
+            "name": "100D",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 96,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 22,
+            "max_dc_charging_kw": 145,
+            "charging_time_0_100_hours": 15.5
+          },
+          {
+            "name": "P100D",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 96,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 22,
+            "max_dc_charging_kw": 145,
+            "charging_time_0_100_hours": 15.5
+          }
+        ]
+      },
+      "2019": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 96,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 22,
+            "max_dc_charging_kw": 200,
+            "charging_time_0_100_hours": 15.5
+          },
+          {
+            "name": "Performance",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 96,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 22,
+            "max_dc_charging_kw": 200,
+            "charging_time_0_100_hours": 15.5
+          }
+        ]
+      },
+      "2020": {
+        "trims": [
+          {
+            "name": "Long Range Plus",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 96,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 22,
+            "max_dc_charging_kw": 200,
+            "charging_time_0_100_hours": 15.5
+          },
+          {
+            "name": "Performance",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 96,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 22,
+            "max_dc_charging_kw": 200,
+            "charging_time_0_100_hours": 15.5
+          }
+        ]
+      },
+      "2021": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 96,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11.5,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 15.5
+          },
+          {
+            "name": "Plaid",
+            "battery_capacity_kwh": 99,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11.5,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 15.4
+          }
+        ]
+      },
+      "2022": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 96,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11.5,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 15.5
+          },
+          {
+            "name": "Plaid",
+            "battery_capacity_kwh": 99,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11.5,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 15.4
+          }
+        ]
+      },
+      "2023": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 96,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11.5,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 15.5
+          },
+          {
+            "name": "Plaid",
+            "battery_capacity_kwh": 99,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11.5,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 15.4
+          }
+        ]
+      },
+      "2024": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 96,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11.5,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 15.5
+          },
+          {
+            "name": "Plaid",
+            "battery_capacity_kwh": 99,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11.5,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 15.4
+          }
+        ]
+      },
+      "2025": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 96,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11.5,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 15.5
+          },
+          {
+            "name": "Plaid",
+            "battery_capacity_kwh": 99,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11.5,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 15.4
+          }
+        ]
+      }
+    },
+    "model_3": {
+      "2017": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 80.5,
+            "usable_capacity_kwh": 78.2,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 170,
+            "charging_time_0_100_hours": 12.7
+          }
+        ]
+      },
+      "2018": {
+        "trims": [
+          {
+            "name": "Long Range RWD",
+            "battery_capacity_kwh": 80.5,
+            "usable_capacity_kwh": 78.2,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 170,
+            "charging_time_0_100_hours": 12.7
+          },
+          {
+            "name": "Long Range AWD",
+            "battery_capacity_kwh": 80.5,
+            "usable_capacity_kwh": 78.2,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 170,
+            "charging_time_0_100_hours": 12.7
+          },
+          {
+            "name": "Performance",
+            "battery_capacity_kwh": 80.5,
+            "usable_capacity_kwh": 78.2,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 170,
+            "charging_time_0_100_hours": 12.7
+          }
+        ]
+      },
+      "2019": {
+        "trims": [
+          {
+            "name": "Standard Range Plus",
+            "battery_capacity_kwh": 52.4,
+            "usable_capacity_kwh": 50,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 170,
+            "charging_time_0_100_hours": 8.1
+          },
+          {
+            "name": "Long Range AWD",
+            "battery_capacity_kwh": 80.5,
+            "usable_capacity_kwh": 78.2,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 170,
+            "charging_time_0_100_hours": 12.7
+          },
+          {
+            "name": "Performance",
+            "battery_capacity_kwh": 80.5,
+            "usable_capacity_kwh": 78.2,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 170,
+            "charging_time_0_100_hours": 12.7
+          }
+        ]
+      },
+      "2020": {
+        "trims": [
+          {
+            "name": "Standard Range Plus",
+            "battery_capacity_kwh": 53,
+            "usable_capacity_kwh": 49,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 170,
+            "charging_time_0_100_hours": 7.9
+          },
+          {
+            "name": "Long Range AWD",
+            "battery_capacity_kwh": 80.5,
+            "usable_capacity_kwh": 78.2,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 170,
+            "charging_time_0_100_hours": 12.7
+          },
+          {
+            "name": "Performance",
+            "battery_capacity_kwh": 80.5,
+            "usable_capacity_kwh": 78.2,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 170,
+            "charging_time_0_100_hours": 12.7
+          }
+        ]
+      },
+      "2021": {
+        "trims": [
+          {
+            "name": "Standard Range Plus",
+            "battery_capacity_kwh": 55,
+            "usable_capacity_kwh": 50.9,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 159,
+            "charging_time_0_100_hours": 8.2
+          },
+          {
+            "name": "Standard Range Plus LFP",
+            "battery_capacity_kwh": 60,
+            "usable_capacity_kwh": 55,
+            "battery_chemistry": "LFP",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 170,
+            "charging_time_0_100_hours": 8.9
+          },
+          {
+            "name": "Long Range AWD",
+            "battery_capacity_kwh": 82,
+            "usable_capacity_kwh": 78.2,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.7
+          },
+          {
+            "name": "Performance",
+            "battery_capacity_kwh": 82,
+            "usable_capacity_kwh": 78.2,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.7
+          }
+        ]
+      },
+      "2022": {
+        "trims": [
+          {
+            "name": "RWD",
+            "battery_capacity_kwh": 60,
+            "usable_capacity_kwh": 55,
+            "battery_chemistry": "LFP",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 170,
+            "charging_time_0_100_hours": 8.9
+          },
+          {
+            "name": "Long Range AWD",
+            "battery_capacity_kwh": 82,
+            "usable_capacity_kwh": 78.2,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.7
+          },
+          {
+            "name": "Performance",
+            "battery_capacity_kwh": 82,
+            "usable_capacity_kwh": 78.2,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.7
+          }
+        ]
+      },
+      "2023": {
+        "trims": [
+          {
+            "name": "RWD",
+            "battery_capacity_kwh": 60,
+            "usable_capacity_kwh": 55,
+            "battery_chemistry": "LFP",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 170,
+            "charging_time_0_100_hours": 8.9
+          },
+          {
+            "name": "Long Range AWD",
+            "battery_capacity_kwh": 82.1,
+            "usable_capacity_kwh": 75,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.1
+          },
+          {
+            "name": "Performance",
+            "battery_capacity_kwh": 82.1,
+            "usable_capacity_kwh": 75,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.1
+          }
+        ]
+      },
+      "2024": {
+        "trims": [
+          {
+            "name": "RWD Highland",
+            "battery_capacity_kwh": 60.9,
+            "usable_capacity_kwh": 57.5,
+            "battery_chemistry": "LFP",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 170,
+            "charging_time_0_100_hours": 9.3
+          },
+          {
+            "name": "Long Range RWD Highland",
+            "battery_capacity_kwh": 84.6,
+            "usable_capacity_kwh": 79.7,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11.5,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.9
+          },
+          {
+            "name": "Long Range AWD Highland",
+            "battery_capacity_kwh": 84.6,
+            "usable_capacity_kwh": 79.7,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11.5,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.9
+          },
+          {
+            "name": "Performance Highland",
+            "battery_capacity_kwh": 84.6,
+            "usable_capacity_kwh": 79.7,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11.5,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.9
+          }
+        ]
+      },
+      "2025": {
+        "trims": [
+          {
+            "name": "RWD",
+            "battery_capacity_kwh": 62.5,
+            "usable_capacity_kwh": 57.5,
+            "battery_chemistry": "LFP",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 170,
+            "charging_time_0_100_hours": 9.3
+          },
+          {
+            "name": "Long Range RWD",
+            "battery_capacity_kwh": 82,
+            "usable_capacity_kwh": 75,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11.5,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.1
+          },
+          {
+            "name": "Long Range AWD",
+            "battery_capacity_kwh": 82,
+            "usable_capacity_kwh": 75,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11.5,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.1
+          },
+          {
+            "name": "Performance",
+            "battery_capacity_kwh": 82,
+            "usable_capacity_kwh": 75,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11.5,
+            "max_dc_charging_kw": 210,
+            "charging_time_0_100_hours": 12.1
+          }
+        ]
+      }
+    },
+    "model_x": {
+      "2015": {
+        "trims": [
+          {
+            "name": "90D",
+            "battery_capacity_kwh": 90,
+            "usable_capacity_kwh": 85.8,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 120,
+            "charging_time_0_100_hours": 13.9
+          },
+          {
+            "name": "P90D",
+            "battery_capacity_kwh": 90,
+            "usable_capacity_kwh": 85.8,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 120,
+            "charging_time_0_100_hours": 13.9
+          }
+        ]
+      },
+      "2016": {
+        "trims": [
+          {
+            "name": "60D",
+            "battery_capacity_kwh": 75,
+            "usable_capacity_kwh": 60,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 120,
+            "charging_time_0_100_hours": 9.7
+          },
+          {
+            "name": "75D",
+            "battery_capacity_kwh": 75,
+            "usable_capacity_kwh": 72,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 120,
+            "charging_time_0_100_hours": 11.7
+          },
+          {
+            "name": "90D",
+            "battery_capacity_kwh": 90,
+            "usable_capacity_kwh": 85.8,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 120,
+            "charging_time_0_100_hours": 13.9
+          },
+          {
+            "name": "P90D",
+            "battery_capacity_kwh": 90,
+            "usable_capacity_kwh": 85.8,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 120,
+            "charging_time_0_100_hours": 13.9
+          },
+          {
+            "name": "100D",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 120,
+            "charging_time_0_100_hours": 15.4
+          },
+          {
+            "name": "P100D",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 120,
+            "charging_time_0_100_hours": 15.4
+          }
+        ]
+      },
+      "2017": {
+        "trims": [
+          {
+            "name": "75D",
+            "battery_capacity_kwh": 75,
+            "usable_capacity_kwh": 72,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 120,
+            "charging_time_0_100_hours": 11.7
+          },
+          {
+            "name": "90D",
+            "battery_capacity_kwh": 90,
+            "usable_capacity_kwh": 85.8,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 120,
+            "charging_time_0_100_hours": 13.9
+          },
+          {
+            "name": "P90D",
+            "battery_capacity_kwh": 90,
+            "usable_capacity_kwh": 85.8,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 120,
+            "charging_time_0_100_hours": 13.9
+          },
+          {
+            "name": "100D",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 120,
+            "charging_time_0_100_hours": 15.4
+          },
+          {
+            "name": "P100D",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 120,
+            "charging_time_0_100_hours": 15.4
+          }
+        ]
+      },
+      "2018": {
+        "trims": [
+          {
+            "name": "75D",
+            "battery_capacity_kwh": 75,
+            "usable_capacity_kwh": 72,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 120,
+            "charging_time_0_100_hours": 11.7
+          },
+          {
+            "name": "100D",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 120,
+            "charging_time_0_100_hours": 15.4
+          },
+          {
+            "name": "P100D",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 120,
+            "charging_time_0_100_hours": 15.4
+          }
+        ]
+      },
+      "2019": {
+        "trims": [
+          {
+            "name": "75D",
+            "battery_capacity_kwh": 75,
+            "usable_capacity_kwh": 72,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 150,
+            "charging_time_0_100_hours": 11.7
+          },
+          {
+            "name": "100D",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 150,
+            "charging_time_0_100_hours": 15.4
+          },
+          {
+            "name": "P100D",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 150,
+            "charging_time_0_100_hours": 15.4
+          }
+        ]
+      },
+      "2020": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 150,
+            "charging_time_0_100_hours": 15.4
+          },
+          {
+            "name": "Long Range Plus",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 150,
+            "charging_time_0_100_hours": 15.4
+          },
+          {
+            "name": "Performance",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 150,
+            "charging_time_0_100_hours": 15.4
+          }
+        ]
+      },
+      "2021": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 15.4
+          },
+          {
+            "name": "Plaid",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 15.4
+          }
+        ]
+      },
+      "2022": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 15.4
+          },
+          {
+            "name": "Plaid",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 15.4
+          }
+        ]
+      },
+      "2023": {
+        "trims": [
+          {
+            "name": "Long Range",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 15.4
+          },
+          {
+            "name": "Plaid",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 15.4
+          }
+        ]
+      },
+      "2024": {
+        "trims": [
+          {
+            "name": "All-Wheel Drive",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 15.4
+          },
+          {
+            "name": "Plaid",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 15.4
+          }
+        ]
+      },
+      "2025": {
+        "trims": [
+          {
+            "name": "All-Wheel Drive",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 15.4
+          },
+          {
+            "name": "Plaid",
+            "battery_capacity_kwh": 100,
+            "usable_capacity_kwh": 95,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 15.4
+          }
+        ]
+      }
+    },
+    "model_y": {
+      "2020": {
+        "trims": [
+          {
+            "name": "Long Range AWD",
+            "battery_capacity_kwh": 82,
+            "usable_capacity_kwh": 77.8,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.6
+          },
+          {
+            "name": "Performance AWD",
+            "battery_capacity_kwh": 82,
+            "usable_capacity_kwh": 77.8,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.6
+          }
+        ]
+      },
+      "2021": {
+        "trims": [
+          {
+            "name": "Long Range AWD",
+            "battery_capacity_kwh": 82,
+            "usable_capacity_kwh": 77.8,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.6
+          },
+          {
+            "name": "Performance AWD",
+            "battery_capacity_kwh": 82,
+            "usable_capacity_kwh": 77.8,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.6
+          },
+          {
+            "name": "Standard Range RWD",
+            "battery_capacity_kwh": 58,
+            "usable_capacity_kwh": 54.8,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 8.9
+          }
+        ]
+      },
+      "2022": {
+        "trims": [
+          {
+            "name": "Long Range AWD",
+            "battery_capacity_kwh": 82,
+            "usable_capacity_kwh": 77.8,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.6
+          },
+          {
+            "name": "Performance AWD",
+            "battery_capacity_kwh": 82,
+            "usable_capacity_kwh": 77.8,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.6
+          },
+          {
+            "name": "AWD 4680",
+            "battery_capacity_kwh": 70,
+            "usable_capacity_kwh": 67.6,
+            "battery_chemistry": "NMC",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 10.9
+          }
+        ]
+      },
+      "2023": {
+        "trims": [
+          {
+            "name": "Long Range AWD",
+            "battery_capacity_kwh": 82,
+            "usable_capacity_kwh": 77.8,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.6
+          },
+          {
+            "name": "Performance AWD",
+            "battery_capacity_kwh": 82,
+            "usable_capacity_kwh": 77.8,
+            "battery_chemistry": "NCA",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.6
+          },
+          {
+            "name": "AWD 4680",
+            "battery_capacity_kwh": 70,
+            "usable_capacity_kwh": 67.6,
+            "battery_chemistry": "NMC",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 10.9
+          },
+          {
+            "name": "RWD",
+            "battery_capacity_kwh": 65,
+            "usable_capacity_kwh": 60,
+            "battery_chemistry": "LFP",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 170,
+            "charging_time_0_100_hours": 9.7
+          }
+        ]
+      },
+      "2024": {
+        "trims": [
+          {
+            "name": "Long Range RWD",
+            "battery_capacity_kwh": 82,
+            "usable_capacity_kwh": 75,
+            "battery_chemistry": "NMC",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.1
+          },
+          {
+            "name": "Long Range AWD",
+            "battery_capacity_kwh": 82,
+            "usable_capacity_kwh": 75,
+            "battery_chemistry": "NMC",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.1
+          },
+          {
+            "name": "Performance AWD",
+            "battery_capacity_kwh": 82,
+            "usable_capacity_kwh": 75,
+            "battery_chemistry": "NMC",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.1
+          }
+        ]
+      },
+      "2025": {
+        "trims": [
+          {
+            "name": "RWD Juniper",
+            "battery_capacity_kwh": 65,
+            "usable_capacity_kwh": 62.5,
+            "battery_chemistry": "LFP",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 170,
+            "charging_time_0_100_hours": 10.1
+          },
+          {
+            "name": "Long Range RWD Juniper",
+            "battery_capacity_kwh": 82,
+            "usable_capacity_kwh": 75,
+            "battery_chemistry": "NMC",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.1
+          },
+          {
+            "name": "Long Range AWD Juniper",
+            "battery_capacity_kwh": 82,
+            "usable_capacity_kwh": 78.4,
+            "battery_chemistry": "NMC",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.7
+          },
+          {
+            "name": "Performance AWD Juniper",
+            "battery_capacity_kwh": 82,
+            "usable_capacity_kwh": 78.4,
+            "battery_chemistry": "NMC",
+            "max_ac_charging_kw": 11,
+            "max_dc_charging_kw": 250,
+            "charging_time_0_100_hours": 12.7
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,12 +1,10 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import {
-  getVehicleByModelAndTrim,
-  TeslaVehicleData,
-  calculateChargingTime,
-} from "./src/data/teslaVehicles.data";
-import { TeslaModel } from "./src/types";
+import { getTrimData } from "./src/data/tesla-models";
+import { calculateChargingTime } from "./src/lib/charging-calculator";
+import { formatModelName } from "./src/lib/utils";
+import { TeslaModelName } from "./src/types/tesla-models";
 
 dotenv.config();
 
@@ -23,7 +21,7 @@ interface HealthResponse {
 }
 
 interface SlackBlock {
-  type: "section" | "context";
+  type: "section" | "context" | "divider";
   text?: {
     type: "mrkdwn";
     text: string;
@@ -69,12 +67,22 @@ async function sendWebhook(payload: SlackPayload): Promise<void> {
     throw new Error("SLACK_WEBHOOK_URL environment variable not configured");
   }
 
+  // wrap blocks with divider at the top and bottom for better separation
+  const decoratedBlocks: SlackBlock[] = [
+    { type: "divider" },
+    ...payload.blocks,
+    { type: "divider" },
+  ];
+  const decoratedPayload: SlackPayload = {
+    text: payload.text,
+    blocks: decoratedBlocks,
+  };
   const response = await fetch(slackWebhookUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(decoratedPayload),
   });
 
   if (!response.ok) {
@@ -95,11 +103,13 @@ app.post(
         req.body;
 
       const vehicleSpec =
-        (user.vehicle_spec as unknown as TeslaVehicleData) ||
-        getVehicleByModelAndTrim(
-          user.tesla_model as TeslaModel,
-          user.tesla_trim || ""
-        );
+        user.tesla_model && user.tesla_year && user.tesla_trim
+          ? getTrimData(
+              user.tesla_model as TeslaModelName,
+              user.tesla_year.toString(),
+              user.tesla_trim
+            )
+          : null;
 
       const endTime = new Date(estimatedEndTime);
       const startTime = new Date();
@@ -107,11 +117,12 @@ app.post(
         (endTime.getTime() - startTime.getTime()) / (1000 * 60)
       );
 
-      const vehicleEmoji = getVehicleEmoji(user.tesla_model);
+      const formattedModelName = formatModelName(user.tesla_model);
+      const vehicleEmoji = getVehicleEmoji(formattedModelName);
 
       const vehicleInfo = user.tesla_trim
-        ? `${user.tesla_year} ${user.tesla_model} ${user.tesla_trim}`
-        : `${user.tesla_year} ${user.tesla_model}`;
+        ? `${user.tesla_year} ${formattedModelName} ${user.tesla_trim}`
+        : `${user.tesla_year} ${formattedModelName}`;
 
       const blocks: SlackBlock[] = [
         {
@@ -156,7 +167,7 @@ app.post(
           elements: [
             {
               type: "mrkdwn",
-              text: `📊 Battery: ${vehicleSpec.battery_kWh}kWh | Est. Charge Time (0-80%): ${vehicleSpec.charge_time_0_to_80}`,
+              text: `📊 Battery: ${vehicleSpec.battery_capacity_kwh}kWh`,
             },
           ],
         });
@@ -183,15 +194,16 @@ app.post(
     try {
       const { user, chargerId, finalCharge, wasCompleted } = req.body;
 
-      const vehicleEmoji = getVehicleEmoji(user.tesla_model);
+      const formattedModelName = formatModelName(user.tesla_model);
+      const vehicleEmoji = getVehicleEmoji(formattedModelName);
       const statusEmoji = wasCompleted ? "✅" : "⏹️";
       const statusText = wasCompleted
         ? "completed charging"
         : "stopped charging early";
 
       const vehicleInfo = user.tesla_trim
-        ? `${user.tesla_year} ${user.tesla_model} ${user.tesla_trim}`
-        : `${user.tesla_year} ${user.tesla_model}`;
+        ? `${user.tesla_year} ${formattedModelName} ${user.tesla_trim}`
+        : `${user.tesla_year} ${formattedModelName}`;
 
       await sendWebhook({
         blocks: [
@@ -237,22 +249,48 @@ app.post(
   async (req: Request, res: Response) => {
     try {
       const { user, position, currentCharge, targetCharge } = req.body;
-      const vehicleSpec = getVehicleByModelAndTrim(
-        user.tesla_model as TeslaModel,
-        user.tesla_trim || ""
-      );
+      const vehicleSpec =
+        user.tesla_model && user.tesla_year && user.tesla_trim
+          ? getTrimData(
+              user.tesla_model as TeslaModelName,
+              user.tesla_year.toString(),
+              user.tesla_trim
+            )
+          : null;
+
+      if (!vehicleSpec) {
+        // Handle case where vehicle spec is not found
+        // For example, send a simplified notification or log an error
+        await sendWebhook({
+          blocks: [
+            {
+              type: "section",
+              text: {
+                type: "mrkdwn",
+                text: `👋 *${user.name}* joined the queue at position *#${position}*`,
+              },
+            },
+          ],
+          text: `${user.name} joined the queue at position #${position}`,
+        });
+        return res.json({
+          success: true,
+          message: "Simplified notification sent.",
+        });
+      }
 
       const chargingTimeMinutes = calculateChargingTime(
-        vehicleSpec!.battery_kWh,
+        vehicleSpec,
         currentCharge,
         targetCharge
       );
 
-      const vehicleEmoji = getVehicleEmoji(user.tesla_model);
+      const formattedModelName = formatModelName(user.tesla_model);
+      const vehicleEmoji = getVehicleEmoji(formattedModelName);
 
       const vehicleInfo = user.tesla_trim
-        ? `${user.tesla_year} ${user.tesla_model} ${user.tesla_trim}`
-        : `${user.tesla_year} ${user.tesla_model}`;
+        ? `${user.tesla_year} ${formattedModelName} ${user.tesla_trim}`
+        : `${user.tesla_year} ${formattedModelName}`;
 
       await sendWebhook({
         blocks: [
@@ -304,10 +342,11 @@ app.post(
   async (req: Request, res: Response) => {
     try {
       const { user, position, reason } = req.body;
-      const vehicleEmoji = getVehicleEmoji(user.tesla_model);
+      const formattedModelName = formatModelName(user.tesla_model);
+      const vehicleEmoji = getVehicleEmoji(formattedModelName);
       const vehicleInfo = user.tesla_trim
-        ? `${user.tesla_year} ${user.tesla_model} ${user.tesla_trim}`
-        : `${user.tesla_year} ${user.tesla_model}`;
+        ? `${user.tesla_year} ${formattedModelName} ${user.tesla_trim}`
+        : `${user.tesla_year} ${formattedModelName}`;
 
       let text;
       if (reason === "moved_to_charger") {

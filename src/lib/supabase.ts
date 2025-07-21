@@ -28,12 +28,14 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   realtime: {
     params: {
       eventsPerSecond: 5,
+      log_level: "info",
     },
     heartbeatIntervalMs: 30000,
     reconnectAfterMs: (tries: number) => {
       const delay = Math.min(1000 * 2 ** tries, 60000); // 2s, 4s, 8s, ... up to 1m
       return delay;
     },
+    timeout: 10000, // bump join ack timeout to 10s
   },
   global: {
     headers: {

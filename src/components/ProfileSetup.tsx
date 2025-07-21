@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { TeslaModel } from "../types";
 import { User as AuthUser } from "@supabase/supabase-js";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,13 +12,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { formatModelName } from "@/lib/utils";
 import {
-  getUniqueModels,
-  getVehiclesByModel,
-  getVehicleByModelAndTrim,
-  calculateChargingTime,
-  formatChargingTime,
-} from "../data/teslaVehicles";
+  modelNames,
+  getTrimsForModelYear,
+  getYearsForModel,
+} from "../data/tesla-models";
+import { TeslaModelName } from "../types/tesla-models";
 
 interface ProfileSetupProps {
   user: AuthUser;
@@ -29,83 +28,40 @@ interface ProfileSetupProps {
 export function ProfileSetup({ user, onComplete }: ProfileSetupProps) {
   const [formData, setFormData] = useState({
     name: user?.user_metadata?.full_name || "",
-    tesla_model: "" as TeslaModel,
+    tesla_model: "" as TeslaModelName,
+    tesla_year: "",
     tesla_trim: "",
-    tesla_year: new Date().getFullYear(),
     preferred_charge_percentage: 80,
-    use_custom_battery: false,
-    custom_battery_kwh: 75,
   });
 
-  const availableModels = getUniqueModels();
-  const availableTrims = formData.tesla_model
-    ? getVehiclesByModel(formData.tesla_model)
+  const availableYears = formData.tesla_model
+    ? getYearsForModel(formData.tesla_model)
     : [];
-  const selectedVehicle =
-    formData.tesla_model && formData.tesla_trim
-      ? getVehicleByModelAndTrim(formData.tesla_model, formData.tesla_trim)
-      : null;
-
-  const availableYears = selectedVehicle
-    ? Array.from(
-        { length: selectedVehicle.yearEnd - selectedVehicle.yearStart + 1 },
-        (_, i) => selectedVehicle.yearEnd - i
-      )
-    : [];
-
-  // Get the effective battery capacity (custom or from vehicle spec)
-  const effectiveBatteryKwh = formData.use_custom_battery
-    ? formData.custom_battery_kwh || 75
-    : selectedVehicle?.battery_kWh || 75;
-
-  // Calculate custom charging time if using custom battery
-  const customChargeTime = formData.use_custom_battery
-    ? formatChargingTime(calculateChargingTime(effectiveBatteryKwh, 0, 80))
-    : selectedVehicle?.charge_time_0_to_80 || "N/A";
+  const availableTrims =
+    formData.tesla_model && formData.tesla_year
+      ? getTrimsForModelYear(formData.tesla_model, formData.tesla_year)
+      : [];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Create a modified vehicle spec if using custom battery
-    let vehicleSpec = selectedVehicle;
-    if (formData.use_custom_battery && selectedVehicle) {
-      vehicleSpec = {
-        ...selectedVehicle,
-        battery_kWh: formData.custom_battery_kwh,
-        charge_time_0_to_80: customChargeTime,
-      };
-    }
-
-    onComplete({
-      email: user.email || "",
-      name: formData.name,
-      tesla_model: formData.tesla_model,
-      tesla_year: formData.tesla_year,
-      preferred_charge_percentage: formData.preferred_charge_percentage,
-      tesla_trim: formData.tesla_trim,
-      vehicle_spec: vehicleSpec as unknown,
-    });
+    onComplete(formData);
   };
 
-  const handleModelChange = (model: TeslaModel) => {
+  const handleModelChange = (model: TeslaModelName) => {
     setFormData({
       ...formData,
       tesla_model: model,
+      tesla_year: "",
       tesla_trim: "",
-      tesla_year: new Date().getFullYear(),
     });
   };
 
+  const handleYearChange = (year: string) => {
+    setFormData({ ...formData, tesla_year: year, tesla_trim: "" });
+  };
+
   const handleTrimChange = (trim: string) => {
-    const vehicle = getVehicleByModelAndTrim(formData.tesla_model, trim);
-    setFormData({
-      ...formData,
-      tesla_trim: trim,
-      tesla_year: vehicle ? vehicle.yearEnd : new Date().getFullYear(),
-      // Reset custom battery when changing trim
-      use_custom_battery: false,
-      custom_battery_kwh: vehicle?.battery_kWh || 75,
-    });
+    setFormData({ ...formData, tesla_trim: trim });
   };
 
   return (
@@ -139,25 +95,27 @@ export function ProfileSetup({ user, onComplete }: ProfileSetupProps) {
             </div>
 
             <div>
-              <Label className="text-sm font-medium text-gray-300 mb-2">
+              <Label htmlFor="tesla_model" className="text-lg font-semibold">
                 Tesla Model
               </Label>
               <div className="grid grid-cols-2 gap-3 mt-2">
-                {availableModels.map((model) => (
+                {modelNames.map((model) => (
                   <Button
                     key={model}
                     type="button"
                     variant={
                       formData.tesla_model === model ? "default" : "outline"
                     }
-                    onClick={() => handleModelChange(model)}
+                    onClick={() => handleModelChange(model as TeslaModelName)}
                     className={`p-3 h-auto ${
                       formData.tesla_model === model
                         ? "bg-primary hover:bg-primary/90 text-white"
                         : "border-gray-600 text-gray-300 hover:bg-gray-700"
                     }`}
                   >
-                    <div className="text-sm font-medium">{model}</div>
+                    <div className="text-sm font-medium">
+                      {formatModelName(model)}
+                    </div>
                   </Button>
                 ))}
               </div>
@@ -166,43 +124,12 @@ export function ProfileSetup({ user, onComplete }: ProfileSetupProps) {
             {formData.tesla_model && (
               <div>
                 <Label className="text-sm font-medium text-gray-300 mb-2">
-                  Trim Level
-                </Label>
-                <Select
-                  value={formData.tesla_trim}
-                  onValueChange={handleTrimChange}
-                >
-                  <SelectTrigger className="mt-2 bg-gray-700 border-gray-600 text-gray-100">
-                    <SelectValue placeholder="Select trim level" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-700 border-gray-600">
-                    {availableTrims.map((vehicle) => (
-                      <SelectItem
-                        key={vehicle.trim}
-                        value={vehicle.trim}
-                        className="text-gray-100 focus:bg-gray-600"
-                      >
-                        {vehicle.trim}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-
-            {formData.tesla_trim && availableYears.length > 0 && (
-              <div>
-                <Label className="text-sm font-medium text-gray-300 mb-2">
                   Year
                 </Label>
                 <Select
-                  value={formData.tesla_year.toString()}
-                  onValueChange={(value) =>
-                    setFormData({
-                      ...formData,
-                      tesla_year: parseInt(value),
-                    })
-                  }
+                  value={formData.tesla_year}
+                  onValueChange={handleYearChange}
+                  disabled={availableYears.length === 0}
                 >
                   <SelectTrigger className="mt-2 bg-gray-700 border-gray-600 text-gray-100">
                     <SelectValue placeholder="Select year" />
@@ -211,10 +138,38 @@ export function ProfileSetup({ user, onComplete }: ProfileSetupProps) {
                     {availableYears.map((year) => (
                       <SelectItem
                         key={year}
-                        value={year.toString()}
+                        value={year}
                         className="text-gray-100 focus:bg-gray-600"
                       >
                         {year}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
+            {formData.tesla_year && (
+              <div>
+                <Label className="text-sm font-medium text-gray-300 mb-2">
+                  Trim Level
+                </Label>
+                <Select
+                  value={formData.tesla_trim}
+                  onValueChange={handleTrimChange}
+                  disabled={availableTrims.length === 0}
+                >
+                  <SelectTrigger className="mt-2 bg-gray-700 border-gray-600 text-gray-100">
+                    <SelectValue placeholder="Select trim level" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-700 border-gray-600">
+                    {availableTrims.map((trim) => (
+                      <SelectItem
+                        key={trim.name}
+                        value={trim.name}
+                        className="text-gray-100 focus:bg-gray-600"
+                      >
+                        {trim.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -250,91 +205,17 @@ export function ProfileSetup({ user, onComplete }: ProfileSetupProps) {
               </div>
             </div>
 
-            {selectedVehicle && (
-              <div className="bg-gray-800 rounded-xl p-4 border border-gray-600">
-                <div className="flex items-center space-x-3 mb-3">
-                  <img
-                    src={selectedVehicle.imageUrl}
-                    alt={`${selectedVehicle.model} ${selectedVehicle.trim}`}
-                    className="w-16 h-10 object-cover rounded-lg border border-gray-600"
-                  />
-                  <div>
-                    <div className="font-medium text-gray-100">
-                      {formData.tesla_year} {selectedVehicle.model}{" "}
-                      {selectedVehicle.trim}
-                    </div>
-                    <div className="text-sm text-gray-400">
-                      {effectiveBatteryKwh} kWh Battery
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Charge Time (0-80%):</span>
-                    <span className="text-gray-300">{customChargeTime}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Battery Capacity:</span>
-                    <span className="text-gray-300">
-                      {effectiveBatteryKwh} kWh
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className="flex items-center space-x-3">
-              <input
-                type="checkbox"
-                id="use_custom_battery"
-                checked={formData.use_custom_battery}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    use_custom_battery: e.target.checked,
-                  })
-                }
-                className="rounded border-gray-600 bg-gray-700 text-primary focus:ring-primary"
-              />
-              <Label
-                htmlFor="use_custom_battery"
-                className="text-sm text-gray-300"
-              >
-                Use custom battery capacity
-              </Label>
-            </div>
-
-            {formData.use_custom_battery && (
-              <div>
-                <Label className="text-sm font-medium text-gray-300 mb-2">
-                  Custom Battery Capacity (kWh)
-                </Label>
-                <Input
-                  type="number"
-                  value={formData.custom_battery_kwh}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      custom_battery_kwh: parseFloat(e.target.value) || 75,
-                    })
-                  }
-                  min="40"
-                  max="200"
-                  step="0.1"
-                  className="mt-2 bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400"
-                />
-              </div>
-            )}
-
             <Button
               type="submit"
+              className="w-full bg-primary hover:bg-primary/90 text-white font-bold"
               disabled={
-                !formData.name || !formData.tesla_model || !formData.tesla_trim
+                !formData.name ||
+                !formData.tesla_model ||
+                !formData.tesla_year ||
+                !formData.tesla_trim
               }
-              className="w-full bg-primary hover:bg-primary/90 text-white py-3 h-auto glow-on-hover"
             >
-              Complete Setup
+              Save Profile
             </Button>
           </form>
         </CardContent>
