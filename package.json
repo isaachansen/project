@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && npm run server:build",
     "lint": "eslint .",
     "preview": "vite preview",
     "server:dev": "tsx watch server.ts",
