@@ -11,8 +11,9 @@
     "server:dev": "tsx watch server.ts",
     "server:build": "tsc -p tsconfig.server.json",
     "server": "npm run server:build && node dist/server.js",
-    "railway:build": "npm ci && npm run build && npm run server:build",
+    "railway:build": "npm ci --production=false && npm run build && npm run server:build && echo 'Build completed successfully'",
     "railway:start": "node dist/server.js",
+    "build:verbose": "npm run build -- --mode=production && npm run server:build",
     "start": "node dist/server.js"
   },
   "dependencies": {
