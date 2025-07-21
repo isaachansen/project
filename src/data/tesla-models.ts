@@ -30,11 +30,16 @@ export function getTrimData(
   year: string,
   trimName: string
 ): Trim | null {
-  const trims = getTrimsForModelYear(model, year);
-  return trims.find((t) => t.name === trimName) || null;
+  const modelData = db.tesla_data[model];
+  if (!modelData) return null;
+
+  const yearData = modelData[year];
+  if (!yearData) return null;
+
+  const trim = yearData.trims.find((t) => t.name === trimName);
+  return trim || null;
 }
 
-// Add function to retrieve charger specs from the database
 export function getChargerSpecs(): ChargerSpecs {
   return db.charging_infrastructure.charger_specs;
 }

@@ -2,10 +2,14 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
-import { getTrimData } from "./src/data/tesla-models";
-import { calculateChargingTime } from "./src/lib/charging-calculator";
-import { formatModelName } from "./src/lib/utils";
-import { TeslaModelName } from "./src/types/tesla-models";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+import { getTrimData } from "./src/data/tesla-models.server.js";
+import { calculateChargingTime } from "./src/lib/charging-calculator.js";
+import { formatModelName } from "./src/lib/utils.js";
+import { TeslaModelName } from "./src/types/tesla-models.js";
 
 dotenv.config();
 

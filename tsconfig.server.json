@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "CommonJS",
+    "module": "ESNext",
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
@@ -19,7 +19,7 @@
   },
   "include": [
     "server.ts",
-    "src/data/tesla-models.ts",
+    "src/data/tesla-models.server.ts",
     "src/lib/charging-calculator.ts",
     "src/lib/utils.ts",
     "src/types/tesla-models.ts"

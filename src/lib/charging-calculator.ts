@@ -1,5 +1,5 @@
-import { Trim } from "../types/tesla-models";
-import { getChargerSpecs } from "../data/tesla-models";
+import { Trim } from "../types/tesla-models.js";
+import { getChargerSpecs } from "../data/tesla-models.server.js";
 
 // Temperature adjustment factors (simplified from previous implementation)
 interface TemperatureEffect {
