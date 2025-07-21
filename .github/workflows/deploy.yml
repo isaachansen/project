@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 env:
-  NODE_VERSION: "18"
+  NODE_VERSION: "20"
   CLIENT_PORT: 5173
   SERVER_PORT: 3001
 

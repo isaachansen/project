@@ -1,0 +1,11 @@
+[providers]
+nodejs = "20"
+
+[phases.build]
+cmd = "npm run build && npm run server:build"
+
+[phases.start]
+cmd = "node dist/server.js"
+
+[variables]
+NODE_ENV = "production" 
