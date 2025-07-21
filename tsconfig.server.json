@@ -17,6 +17,12 @@
     "declaration": false,
     "sourceMap": false
   },
-  "include": ["server.ts", "src/**/*"],
+  "include": [
+    "server.ts",
+    "src/data/tesla-models.ts",
+    "src/lib/charging-calculator.ts",
+    "src/lib/utils.ts",
+    "src/types/tesla-models.ts"
+  ],
   "exclude": ["node_modules", "dist"]
 }
