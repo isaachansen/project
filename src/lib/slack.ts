@@ -10,7 +10,7 @@ export class SlackService {
     body: Record<string, unknown>
   ): Promise<void> {
     try {
-      const proxyUrl = `http://localhost:3001/api/slack/notify/${endpoint}`;
+      const proxyUrl = `/api/slack/notify/${endpoint}`;
       const response = await fetch(proxyUrl, {
         method: "POST",
         headers: {
